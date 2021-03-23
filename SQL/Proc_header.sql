@@ -1,7 +1,7 @@
 /*
-** Kort beskrivning
+** Short description
 **
 ** Date        Version  Author  Comment
 ** ----------  -------  ------  --------------------------------------------------------------------------------------------
-** 2021-02-05  01.000   eriwen  Första Release
+** 2021-02-05  01.000   eriwen  First Release
 */
