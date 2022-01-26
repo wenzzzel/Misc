@@ -13,3 +13,7 @@ function Open-NvimNotes {
     Write-Host "Opening notes with nvim" -ForegroundColor Blue;
     nvim "C:\Users\ewentzel\Crap\Notes\note1.txt";
 }
+
+Write-Host "Setting user defined variables" -ForegroundColor Blue;
+$nvimConfigFile = "C:\Users\ewentzel\AppData\Local\nvim\init.vim"
+Write-Host '    $nvimConfigFile' -ForegroundColor Yellow;
