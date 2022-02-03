@@ -6,3 +6,6 @@
 !.gitignore
 !SQL/*
 !PowerShell/*
+
+#Specifically these
+PowerShell/powershell.config.json
