@@ -25,5 +25,7 @@ function Get-AzureFunctionApps {
 }
 
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
-$nvimConfigFile = "C:\Users\ewentzel\AppData\Local\nvim\init.vim"
+Write-Host '    $thisRepoRootDir' -ForegroundColor Yellow;
+$thisRepoRootDir = "C:\Users\ewentzel\OneDrive - Volvo Cars\Documents"
 Write-Host '    $nvimConfigFile' -ForegroundColor Yellow;
+$nvimConfigFile = "C:\Users\ewentzel\AppData\Local\nvim\init.vim"
