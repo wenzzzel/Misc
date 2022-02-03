@@ -14,6 +14,15 @@ function Open-NvimNotes {
     Write-Host "Opening notes with nvim" -ForegroundColor Blue;
     nvim "C:\Users\ewentzel\Crap\Notes\note1.txt" +$;
 }
+Write-Host "    Get-AzureFunctionApps" -ForegroundColor Yellow;
+function Get-AzureFunctionApps {
+    Write-Host "Fetching function apps from Azure using Azure CLI" -ForegroundColor Blue;
+    $functions = (az functionapp list);
+    Write-Host "Converting json string to object" -ForegroundColor Blue;
+    $JsonFunctions = ($functions | ConvertFrom-Json);
+    Write-Host "Returning object" -ForegroundColor Blue;
+    return $JsonFunctions;
+}
 
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
 $nvimConfigFile = "C:\Users\ewentzel\AppData\Local\nvim\init.vim"
