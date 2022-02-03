@@ -5,6 +5,9 @@ $ENV:PATH += ";C:\Users\ewentzel\AppData\Roaming\npm";
 $ENV:PATH += ";C:\Program Files\Neovim\bin";
 $ENV:PATH += ";C:\Program Files\azure-documentdb-datamigrationtool-1.8.3";
 
+Write-Host "Loading PSSecrets" -ForegroundColor Blue;
+$PSSecrets = Get-Content "C:\psSecrets.json" | ConvertFrom-Json;
+
 Write-Host "Stepping into C:\Users\ewentzel\source\repos\" -ForegroundColor Blue;
 cd "C:\Users\ewentzel\source\repos";
 
@@ -29,3 +32,4 @@ Write-Host '    $thisRepoRootDir' -ForegroundColor Yellow;
 $thisRepoRootDir = "C:\Users\ewentzel\OneDrive - Volvo Cars\Documents"
 Write-Host '    $nvimConfigFile' -ForegroundColor Yellow;
 $nvimConfigFile = "C:\Users\ewentzel\AppData\Local\nvim\init.vim"
+
