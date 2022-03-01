@@ -10,9 +10,6 @@ $ENV:PATH += ";C:\Program Files\Microsoft\Azure Functions Core Tools\";
 Write-Host "Loading PSSecrets" -ForegroundColor Blue;
 $PSSecrets = Get-Content "C:\psSecrets.json" | ConvertFrom-Json;
 
-Write-Host "Stepping into C:\Users\ewentzel\source\repos\" -ForegroundColor Blue;
-cd "C:\Users\ewentzel\source\repos";
-
 Write-Host "Creating user defined functions" -ForegroundColor Blue;
 Write-Host "    Open-NvimNotes" -ForegroundColor Yellow;
 function Open-NvimNotes {
@@ -47,3 +44,5 @@ Write-Host '    $nvimPluginsFolder' -ForegroundColor Yellow;
 $nvimPluginsFolder = "C:\Users\ewentzel\OneDrive - Volvo Cars\Documents\nvim_plugins"
 Write-Host '    $crap' -ForegroundColor Yellow;
 $crap = "C:\Users\ewentzel\Crap"
+Write-Host '    $repos' -ForegroundColor Yellow;
+$repos = "C:\Users\ewentzel\source\repos"
