@@ -11,6 +11,15 @@ $ENV:PATH += ";C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin";
 Write-Host "Loading PSSecrets" -ForegroundColor Blue;
 $PSSecrets = Get-Content "C:\psSecrets.json" | ConvertFrom-Json;
 
+Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
+[bool]$IsInstalled = $false;
+$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'CosmosDB' | Measure-Object | Select-Object -ExpandProperty Count)
+if(!$IsInstalled){
+    $errMess = "One or more dependencies is not installed!";
+    Write-Host $errMess -ForegroundColor Red;
+    Throw $errMess;
+}
+
 Write-Host "Creating user defined functions" -ForegroundColor Blue;
 Write-Host "    Open-NvimNotes" -ForegroundColor Yellow;
 function Open-NvimNotes {
