@@ -1,3 +1,7 @@
+# NOTE THAT THERE IS A DEPENDENCY TO THE MODULE CosmosDB
+# https://www.powershellgallery.com/packages/CosmosDB/4.1.0
+# https://github.com/PlagueHO/CosmosDB
+
 $primaryKey = ConvertTo-SecureString `
     -String "<Put db primary key here>" `
     -AsPlainText `
