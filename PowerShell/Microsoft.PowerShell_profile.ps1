@@ -44,6 +44,21 @@ function Get-AzureKeyVaults {
     Write-Host "Returning object" -ForegroundColor Blue;
     return $JsonFunctions;
 }
+Write-Host "    Test-Unit" -ForegroundColor Yellow;
+function Test-Unit {
+    param (
+        [Parameter(Mandatory=$false)][string]$TestName
+    )
+    
+    if($PSBoundParameters.ContainsKey('TestName')){
+        Write-Host "dotnet test --filter name=$TestName" -ForegroundColor Blue;
+        dotnet test --filter "name=$TestName"
+    }else{
+        Write-Host "dotnet test" -ForegroundColor Blue;
+        dotnet test
+    }
+}
+New-Alias -Name test -Value Test-Unit;
 
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
 Write-Host '    $thisRepoRootDir' -ForegroundColor Yellow;
