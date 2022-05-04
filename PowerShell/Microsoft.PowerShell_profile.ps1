@@ -53,7 +53,7 @@ function Test-Unit {
     
     if($PSBoundParameters.ContainsKey('TestName')){
         Write-Host "dotnet test --filter name=$TestName" -ForegroundColor Blue;
-        dotnet test --filter "name=$TestName"
+        dotnet test --filter "FullyQualifiedName~$TestName"
         return;
     }
 
