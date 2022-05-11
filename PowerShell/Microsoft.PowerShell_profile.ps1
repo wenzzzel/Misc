@@ -80,3 +80,5 @@ Write-Host '    $crap' -ForegroundColor Yellow;
 $crap = "C:\Users\ewentzel\Crap"
 Write-Host '    $repos' -ForegroundColor Yellow;
 $repos = "C:\Users\ewentzel\source\repos"
+Write-Host '    $dotnetSecretStore' -ForegroundColor Yellow;
+$dotnetSecretStore = "$env:APPDATA\Microsoft\UserSecrets\"
