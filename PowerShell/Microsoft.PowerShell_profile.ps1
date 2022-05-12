@@ -64,7 +64,7 @@ function Test-Unit {
     }
     
     Write-Host "dotnet test --filter TestCategory!=Integration" -ForegroundColor Blue;
-    dotnet test --filter TestCategory!=Integration
+    dotnet test --filter TestCategory!=Integrations
     return;
 }
 New-Alias -Name test -Value Test-Unit;
