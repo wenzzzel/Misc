@@ -63,7 +63,7 @@ function Test-Unit {
         return
     }
     
-    Write-Host "dotnet test --filter TestCategory!=Integration" -ForegroundColor Blue;
+    Write-Host "dotnet test --filter TestCategory!=Integrations" -ForegroundColor Blue;
     dotnet test --filter TestCategory!=Integrations
     return;
 }
