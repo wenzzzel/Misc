@@ -14,6 +14,7 @@ $PSSecrets = Get-Content "C:\psSecrets.json" | ConvertFrom-Json;
 Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
 [bool]$IsInstalled = $false;
 $IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'CosmosDB' | Measure-Object | Select-Object -ExpandProperty Count)
+$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'NuGet' | Measure-Object | Select-Object -ExpandProperty Count)
 if(!$IsInstalled){
     $errMess = "One or more dependencies is not installed!";
     Write-Host $errMess -ForegroundColor Red;
@@ -68,6 +69,31 @@ function Test-Unit {
     return;
 }
 New-Alias -Name test -Value Test-Unit;
+Write-Host "    Find-NuGet" -ForegroundColor Yellow;
+function Find-NuGet {
+    param (
+        [Parameter(Mandatory=$true)][string]$NugetName
+    )
+    Write-Host "Find-Package -Source nuget.org -Name $NugetName*" -ForegroundColor Blue;
+    $Packages = Find-Package -Source nuget.org -Name $NugetName*
+
+    $FormattedList = $Packages | Select-Object Name, @{ Name = 'LatestVersion'; Expression = { $_.Version }};
+    return $FormattedList
+}
+New-Alias -Name fng -Value Find-NuGet;
+Write-Host "    Find-NuGetVersions" -ForegroundColor Yellow;
+function Find-NuGetVersions {
+    param (
+        [Parameter(Mandatory=$true)][string]$NugetName
+    )
+    Write-Host "Find-Package -Source nuget.org -Name $NugetName -AllVersions" -ForegroundColor Blue;
+    $Packages = Find-Package -Source nuget.org -Name $NugetName -AllVersions
+
+    Write-Host "Package name: $($Packages[0].Name)" 
+    Write-Host "Package summary: $($Packages[0].Summary)"
+    return $Packages | Select-Object Version;
+}
+New-Alias -Name fngv -Value Find-NuGetVersions;
 
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
 Write-Host '    $thisRepoRootDir' -ForegroundColor Yellow;
