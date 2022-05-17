@@ -108,3 +108,5 @@ Write-Host '    $repos' -ForegroundColor Yellow;
 $repos = "C:\Users\ewentzel\source\repos"
 Write-Host '    $dotnetSecretStore' -ForegroundColor Yellow;
 $dotnetSecretStore = "$env:APPDATA\Microsoft\UserSecrets\"
+Write-Host '    $ds' -ForegroundColor Yellow; #Makes sense to have var for this since almost all repos are prefixed with dataservices
+$ds = "dataservices"
