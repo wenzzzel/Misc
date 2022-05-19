@@ -95,6 +95,10 @@ function Find-NuGetVersions {
 }
 New-Alias -Name fngv -Value Find-NuGetVersions;
 
+#TODO: Create function for finding correct secret.json and opening it here
+
+#TODO: Create function for generating the functions setting (json list of functions to run) for azure functions project
+
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
 Write-Host '    $thisRepoRootDir' -ForegroundColor Yellow;
 $thisRepoRootDir = "C:\Users\ewentzel\OneDrive - Volvo Cars\Documents"
