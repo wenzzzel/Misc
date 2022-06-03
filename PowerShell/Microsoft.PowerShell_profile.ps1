@@ -138,7 +138,7 @@ function New-DotnetLaunchettings {
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
-            "applicationUrl": "https://localhost:57300;http://localhost:57302"
+            "applicationUrl": "https://localhost:50001;http://localhost:5000"
         }
     }
 }
