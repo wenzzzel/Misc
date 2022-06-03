@@ -13,6 +13,7 @@ $PSSecrets = Get-Content "C:\psSecrets.json" | ConvertFrom-Json;
 
 Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
 [bool]$IsInstalled = $false;
+#TODO: Below check is proly not working as intended. Need to fix that...
 $IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'CosmosDB' | Measure-Object | Select-Object -ExpandProperty Count)
 $IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'NuGet' | Measure-Object | Select-Object -ExpandProperty Count)
 if(!$IsInstalled){
