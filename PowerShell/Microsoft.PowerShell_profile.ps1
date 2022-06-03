@@ -94,8 +94,56 @@ function Find-NuGetVersions {
     return $Packages | Select-Object Version;
 }
 New-Alias -Name fngv -Value Find-NuGetVersions;
+Write-Host "    New-DotnetLaunchettings" -ForegroundColor Yellow;
+function New-DotnetLaunchettings {
+    #TODO: Clean up alot
+    #TODO: File gets created with two unecessary indentions. Remove those.
+    #TODO: Figure out Profile name instead of setting placeholder <projectRootFolderName>
+    #TODO: Maybe add an alias to this function?
+    param (
+        [Parameter(Mandatory=$false)][string]$Csproj
+    )
 
-#TODO: Create function for setting up launchsettings.json
+    Write-Host "No csproj provided. Trying to find it manually."
+    $projectDir = ls -Recurse | ? -Property Extension -eq '.csproj' | ? -Property Name -NotLike '*test*' | select -ExpandProperty Directory | select -ExpandProperty FullName;
+    
+    if(!(Test-Path $projectDir) || $projectDir.count -ne 1){
+        throw "Something happened when getting the projectDir";
+    }
+
+    $propertiesDir = "$projectDir/Properties";
+    if(Test-Path $propertiesDir){
+        Write-Host "Properties folder already exists. Skipping folder creation."
+    }else{
+        Write-Host "Creating properties folder"
+        ni -ItemType Directory -Path $propertiesDir;
+    }
+
+    $launchsettingsFile = "$propertiesDir/launchsettings.json";
+    if(Test-Path $launchsettingsFile){
+        Write-Host "Launchsettings already exists. Why have you run this command? Do you think I'm a joke you little shit!?"
+    }else{
+
+        $launchsettingsFileContent = '
+        {
+            "profiles": {
+                "<projectRootFolderName>": {
+                    "commandName": "Project",
+                    "launchBrowser": true,
+                    "environmentVariables": {
+                        "ASPNETCORE_ENVIRONMENT": "Development"
+                    },
+                    "applicationUrl": "https://localhost:57300;http://localhost:57302"
+                }
+            }
+        }
+        '
+        Write-Host "Creating launchsettings.json";
+        ni -ItemType File -Path $launchsettingsFile -Value $launchsettingsFileContent;
+    }
+
+    return
+}
 
 #TODO: Create function for finding correct secret.json and opening it here
 
