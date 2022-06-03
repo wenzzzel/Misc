@@ -95,6 +95,8 @@ function Find-NuGetVersions {
 }
 New-Alias -Name fngv -Value Find-NuGetVersions;
 
+#TODO: Create function for setting up launchsettings.json
+
 #TODO: Create function for finding correct secret.json and opening it here
 
 #TODO: Create function for generating the functions setting (json list of functions to run) for azure functions project
