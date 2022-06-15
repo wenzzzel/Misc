@@ -182,6 +182,19 @@ function Edit-DotnetUserSecretsPath {
 #TODO: Create function creating local.settings.json (for azure function app projects
 
 #TODO: Create function for setting up local environment for azure functions. Sort of a reminder list thingy
+#      This needs to be included
+#       - local.settings.json (Must have value for AzureWebJobsStorage: "AzureWebJobsStorage": "UseDevelopmentStorage=true")
+#           - This is how mine looks right now for example
+#{
+#  "IsEncrypted": false,
+#  "Values": {
+#    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+#    "AzureWebJobsStorage": "UseDevelopmentStorage=true"
+#  }
+#}
+#       - Add Azurite files to gitignore
+#       - Ctrl + Shift + P: Azurite: Start
+#       - Ctrl + Shift + P: Azure Functions: Initialize Project for Use with VS Code...
 
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
 Write-Host '    $thisRepoRootDir' -ForegroundColor Yellow;
