@@ -154,6 +154,8 @@ function New-DotnetLaunchettings {
 
 #TODO: Create function for generating the functions setting (json list of functions to run) for azure functions project
 
+#TODO: Create function creating local.settings.json (for azure function app projects)
+
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
 Write-Host '    $thisRepoRootDir' -ForegroundColor Yellow;
 $thisRepoRootDir = "C:\Users\ewentzel\OneDrive - Volvo Cars\Documents"
