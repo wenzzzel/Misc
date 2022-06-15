@@ -154,7 +154,9 @@ function New-DotnetLaunchettings {
 
 #TODO: Create function for generating the functions setting (json list of functions to run) for azure functions project
 
-#TODO: Create function creating local.settings.json (for azure function app projects)
+#TODO: Create function creating local.settings.json (for azure function app projects
+
+#TODO: Create function for setting up local environment for azure functions. Sort of a reminder list thingy
 
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
 Write-Host '    $thisRepoRootDir' -ForegroundColor Yellow;
