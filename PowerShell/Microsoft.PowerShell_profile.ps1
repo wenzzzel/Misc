@@ -149,8 +149,33 @@ function New-DotnetLaunchettings {
 
     return
 }
+Write-Host "    Edit-DotnetUserSecretsPath" -ForegroundColor Yellow;
+function Edit-DotnetUserSecretsPath {
+    Write-Host "Looking for csproj in sub directories"
+    $csprojs = ls -Recurse | ? -Property Extension -eq '.csproj';
+    Write-Host "Found $($csprojs | Measure-Object | Select-Object -ExpandProperty Count) csproj(s)"
 
-#TODO: Create function for finding correct secret.json and opening it here
+    foreach ($csproj in $csprojs) {
+        $xmlNode = select-xml `
+            -Path $csProj.FullName `
+            -XPath "/Project/PropertyGroup/UserSecretsId" `
+
+        if($null -eq $xmlNode){
+            Write-Host "No user secrets store initiated on this project";
+            continue;
+        }
+
+        $userSecret = $xmlNode.Node.InnerText
+        $secretStoreDirectory = (ls $env:APPDATA\Microsoft\UserSecrets\ | ? -Property Name -Like $userSecret)
+        $secretsFile = (ls $secretStoreDirectory | ? -Property Name -eq 'secrets.json');
+        if($null -eq $secretsFile){
+            Write-Host "User secrets are initiated, but no secrets have been set yet. Creating file for it"
+            $secretsFile = (ni -ItemType File -Path "$secretStoreDirectory/secrets.json")
+        }
+        Write-Host "Opening secrets file"
+        code $secretsFile
+    }
+}
 
 #TODO: Create function for generating the functions setting (json list of functions to run) for azure functions project
 
