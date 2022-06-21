@@ -1,5 +1,6 @@
 Write-Host "Adding to path variable" -ForegroundColor Blue;
 $ENV:PATH += ";C:\Program Files\Git\bin";
+$ENV:PATH += ";C:\Program Files\Git\usr\bin"; #This is where openssl.exe is located
 $ENV:PATH += ";C:\Program Files\nodejs\";
 $ENV:PATH += ";C:\Users\ewentzel\AppData\Roaming\npm";
 $ENV:PATH += ";C:\Program Files\Neovim\bin";
