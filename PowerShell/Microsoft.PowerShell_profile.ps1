@@ -9,6 +9,7 @@ $ENV:PATH += ";C:\Program Files\dotnet"
 $ENV:PATH += ";C:\Program Files\Microsoft\Azure Functions Core Tools\";
 $ENV:PATH += ";C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin";
 $ENV:PATH += ";C:\ProgramData\chocolatey\lib\mouse-jiggler\tools";
+$ENV:PATH += ";C:\Program Files\Gource";
 
 Write-Host "Loading PSSecrets" -ForegroundColor Blue;
 $PSSecrets = Get-Content "C:\psSecrets.json" | ConvertFrom-Json;
