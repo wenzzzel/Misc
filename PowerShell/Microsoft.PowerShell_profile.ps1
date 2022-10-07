@@ -8,6 +8,7 @@ $ENV:PATH += ";C:\Program Files\azure-documentdb-datamigrationtool-1.8.3";
 $ENV:PATH += ";C:\Program Files\dotnet"
 $ENV:PATH += ";C:\Program Files\Microsoft\Azure Functions Core Tools\";
 $ENV:PATH += ";C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin";
+$ENV:PATH += ";C:\ProgramData\chocolatey\lib\mouse-jiggler\tools";
 
 Write-Host "Loading PSSecrets" -ForegroundColor Blue;
 $PSSecrets = Get-Content "C:\psSecrets.json" | ConvertFrom-Json;
@@ -15,7 +16,12 @@ $PSSecrets = Get-Content "C:\psSecrets.json" | ConvertFrom-Json;
 Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
 [bool]$IsInstalled = $false;
 #TODO: Below check is proly not working as intended. Need to fix that...
-$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'CosmosDB' | Measure-Object | Select-Object -ExpandProperty Count)
+# $IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'CosmosDB' | Measure-Object | Select-Object -ExpandProperty Count)
+# if(!$IsInstalled){
+#     $errMess = "One or more dependencies is not installed!";
+#     Write-Host $errMess -ForegroundColor Red;
+#     Throw $errMess;
+# }
 $IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'NuGet' | Measure-Object | Select-Object -ExpandProperty Count)
 if(!$IsInstalled){
     $errMess = "One or more dependencies is not installed!";
@@ -309,3 +315,13 @@ Write-Host '    $dotnetSecretStore' -ForegroundColor Yellow;
 $dotnetSecretStore = "$env:APPDATA\Microsoft\UserSecrets\"
 Write-Host '    $ds' -ForegroundColor Yellow; #Makes sense to have var for this since almost all repos are prefixed with dataservices
 $ds = "dataservices"
+
+# Import the Chocolatey Profile that contains the necessary code to enable
+# tab-completions to function for `choco`.
+# Be aware that if you are missing these lines from your profile, tab completion
+# for `choco` will not function.
+# See https://ch0.co/tab-completion for details.
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}
