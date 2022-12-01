@@ -12,7 +12,12 @@ $ENV:PATH += ";C:\ProgramData\chocolatey\lib\mouse-jiggler\tools";
 $ENV:PATH += ";C:\Program Files\Gource";
 
 Write-Host "Loading PSSecrets" -ForegroundColor Blue;
-$PSSecrets = Get-Content "C:\psSecrets.json" | ConvertFrom-Json;
+$PSSecretsPath = "C:\psSecrets.json";
+if(!(Test-Path $PSSecretsPath)){
+    Write-Host "No psSecrets.json found. Creating it..." -ForegroundColor Blue;
+    New-Item -ItemType File -Path $PSSecretsPath; 
+}
+$PSSecrets = Get-Content $PSSecretsPath | ConvertFrom-Json;
 
 Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
 [bool]$IsInstalled = $false;
