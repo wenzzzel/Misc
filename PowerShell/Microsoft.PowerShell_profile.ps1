@@ -162,8 +162,8 @@ function New-DotnetLaunchettings {
 
     return
 }
-Write-Host "    Edit-DotnetUserSecretsPath" -ForegroundColor Yellow;
-function Edit-DotnetUserSecretsPath {
+Write-Host "    Edit-DotnetUserSecrets" -ForegroundColor Yellow;
+function Edit-DotnetUserSecrets {
     Write-Host "Looking for csproj in sub directories"
     $csprojs = ls -Recurse | ? -Property Extension -eq '.csproj';
     Write-Host "Found $($csprojs | Measure-Object | Select-Object -ExpandProperty Count) csproj(s)"
