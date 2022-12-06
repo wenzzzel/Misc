@@ -20,15 +20,14 @@ if(!(Test-Path $PSSecretsPath)){
 $PSSecrets = Get-Content $PSSecretsPath | ConvertFrom-Json;
 
 Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
-[bool]$IsInstalled = $false;
 #TODO: Below check is proly not working as intended. Need to fix that...
-# $IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'CosmosDB' | Measure-Object | Select-Object -ExpandProperty Count)
+# [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'CosmosDB' | Measure-Object | Select-Object -ExpandProperty Count)
 # if(!$IsInstalled){
 #     $errMess = "One or more dependencies is not installed!";
 #     Write-Host $errMess -ForegroundColor Red;
 #     Throw $errMess;
 # }
-$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'NuGet' | Measure-Object | Select-Object -ExpandProperty Count)
+[bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'NuGet' | Measure-Object | Select-Object -ExpandProperty Count)
 if(!$IsInstalled){
     $errMess = "One or more dependencies is not installed!";
     Write-Host $errMess -ForegroundColor Red;
@@ -52,16 +51,15 @@ Write-Host '    $ds' -ForegroundColor Yellow; #Makes sense to have var for this 
 $ds = "dataservices"
 
 Write-Host "Creating user defined functions" -ForegroundColor Blue;
-$UserDefinedFunctionsPath = "$thisRepoRootDir/User_defined_functions";
-$UserDefinedFunctions = (Get-ChildItem $UserDefinedFunctionsPath);
+$UserDefinedFunctions = (Get-ChildItem "$thisRepoRootDir/User_defined_functions");
 $modulePaths = ($env:PSModulePath.Split(";"));
 foreach($UserDefinedFunction in $UserDefinedFunctions){
-    foreach($modulePath in $modulePaths){
-        if(!(Test-Path ("$modulePath" + "/" + "$($UserDefinedFunction.Name)"))){
-            Copy-Item $UserDefinedFunction -Destination $modulePath -Recurse;
-        }
-    }
     Write-Host "    $($UserDefinedFunction.Name)" -ForegroundColor Yellow;
+
+    foreach($modulePath in $modulePaths){
+        Copy-Item $UserDefinedFunction -Destination $modulePath -Recurse -Force;
+    }
+    
     Import-Module $UserDefinedFunction.Name;
 }
 
