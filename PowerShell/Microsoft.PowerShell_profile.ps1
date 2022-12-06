@@ -31,31 +31,31 @@ foreach($moduleDependency in $moduleDependencies){
         Write-Host $errMess -ForegroundColor Red;
         Throw $errMess;
     } else {
-        Write-Host "    ✔️ $moduleDependency" -ForegroundColor Yellow;
+        Write-Host " ✔️ $moduleDependency" -ForegroundColor Yellow;
     }
 }
 
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
-Write-Host '    🔠 $thisRepoRootDir' -ForegroundColor Yellow;
+Write-Host ' 🔠 $thisRepoRootDir' -ForegroundColor Yellow;
 $thisRepoRootDir = "$PROFILE/../"
-Write-Host '    🔠 $nvimConfigFile' -ForegroundColor Yellow;
+Write-Host ' 🔠 $nvimConfigFile' -ForegroundColor Yellow;
 $nvimConfigFile = "C:\Users\ewentzel\AppData\Local\nvim\init.vim"
-Write-Host '    🔠 $nvimPluginsFolder' -ForegroundColor Yellow;
+Write-Host ' 🔠 $nvimPluginsFolder' -ForegroundColor Yellow;
 $nvimPluginsFolder = "C:\Users\ewentzel\OneDrive - Volvo Cars\Documents\nvim_plugins"
-Write-Host '    🔠 $crap' -ForegroundColor Yellow;
+Write-Host ' 🔠 $crap' -ForegroundColor Yellow;
 $crap = "C:\Users\ewentzel\Crap"
-Write-Host '    🔠 $repos' -ForegroundColor Yellow;
+Write-Host ' 🔠 $repos' -ForegroundColor Yellow;
 $repos = "C:\Users\ewentzel\source\repos"
-Write-Host '    🔠 $dotnetSecretStore' -ForegroundColor Yellow;
+Write-Host ' 🔠 $dotnetSecretStore' -ForegroundColor Yellow;
 $dotnetSecretStore = "$env:APPDATA\Microsoft\UserSecrets\"
-Write-Host '    🔠 $ds' -ForegroundColor Yellow; #Makes sense to have var for this since almost all repos are prefixed with dataservices
+Write-Host ' 🔠 $ds' -ForegroundColor Yellow; #Makes sense to have var for this since almost all repos are prefixed with dataservices
 $ds = "dataservices"
 
 Write-Host "Creating user defined functions" -ForegroundColor Blue;
 $UserDefinedFunctions = (Get-ChildItem "$thisRepoRootDir/User_defined_functions");
 $modulePaths = ($env:PSModulePath.Split(";"));
 foreach($UserDefinedFunction in $UserDefinedFunctions){
-    Write-Host "    ⚙️ $($UserDefinedFunction.Name)" -ForegroundColor Yellow;
+    Write-Host " ⚙️ $($UserDefinedFunction.Name)" -ForegroundColor Yellow;
 
     foreach($modulePath in $modulePaths){
         Copy-Item $UserDefinedFunction -Destination $modulePath -Recurse -Force;
