@@ -20,41 +20,42 @@ if(!(Test-Path $PSSecretsPath)){
 $PSSecrets = Get-Content $PSSecretsPath | ConvertFrom-Json;
 
 Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
-#TODO: Below check is proly not working as intended. Need to fix that...
-# [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'CosmosDB' | Measure-Object | Select-Object -ExpandProperty Count)
-# if(!$IsInstalled){
-#     $errMess = "One or more dependencies is not installed!";
-#     Write-Host $errMess -ForegroundColor Red;
-#     Throw $errMess;
-# }
-[bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq 'NuGet' | Measure-Object | Select-Object -ExpandProperty Count)
-if(!$IsInstalled){
-    $errMess = "One or more dependencies is not installed!";
-    Write-Host $errMess -ForegroundColor Red;
-    Throw $errMess;
+$moduleDependencies = @(
+    'NuGet'#,
+    #'CosmosDB'
+);
+foreach($moduleDependency in $moduleDependencies){
+    [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq $moduleDependency | Measure-Object | Select-Object -ExpandProperty Count)
+    if(!$IsInstalled){
+        $errMess = "One or more dependencies is not installed!";
+        Write-Host $errMess -ForegroundColor Red;
+        Throw $errMess;
+    } else {
+        Write-Host "    ✔️ $moduleDependency" -ForegroundColor Yellow;
+    }
 }
 
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
-Write-Host '    $thisRepoRootDir' -ForegroundColor Yellow;
+Write-Host '    🔠 $thisRepoRootDir' -ForegroundColor Yellow;
 $thisRepoRootDir = "$PROFILE/../"
-Write-Host '    $nvimConfigFile' -ForegroundColor Yellow;
+Write-Host '    🔠 $nvimConfigFile' -ForegroundColor Yellow;
 $nvimConfigFile = "C:\Users\ewentzel\AppData\Local\nvim\init.vim"
-Write-Host '    $nvimPluginsFolder' -ForegroundColor Yellow;
+Write-Host '    🔠 $nvimPluginsFolder' -ForegroundColor Yellow;
 $nvimPluginsFolder = "C:\Users\ewentzel\OneDrive - Volvo Cars\Documents\nvim_plugins"
-Write-Host '    $crap' -ForegroundColor Yellow;
+Write-Host '    🔠 $crap' -ForegroundColor Yellow;
 $crap = "C:\Users\ewentzel\Crap"
-Write-Host '    $repos' -ForegroundColor Yellow;
+Write-Host '    🔠 $repos' -ForegroundColor Yellow;
 $repos = "C:\Users\ewentzel\source\repos"
-Write-Host '    $dotnetSecretStore' -ForegroundColor Yellow;
+Write-Host '    🔠 $dotnetSecretStore' -ForegroundColor Yellow;
 $dotnetSecretStore = "$env:APPDATA\Microsoft\UserSecrets\"
-Write-Host '    $ds' -ForegroundColor Yellow; #Makes sense to have var for this since almost all repos are prefixed with dataservices
+Write-Host '    🔠 $ds' -ForegroundColor Yellow; #Makes sense to have var for this since almost all repos are prefixed with dataservices
 $ds = "dataservices"
 
 Write-Host "Creating user defined functions" -ForegroundColor Blue;
 $UserDefinedFunctions = (Get-ChildItem "$thisRepoRootDir/User_defined_functions");
 $modulePaths = ($env:PSModulePath.Split(";"));
 foreach($UserDefinedFunction in $UserDefinedFunctions){
-    Write-Host "    $($UserDefinedFunction.Name)" -ForegroundColor Yellow;
+    Write-Host "    ⚙️ $($UserDefinedFunction.Name)" -ForegroundColor Yellow;
 
     foreach($modulePath in $modulePaths){
         Copy-Item $UserDefinedFunction -Destination $modulePath -Recurse -Force;
