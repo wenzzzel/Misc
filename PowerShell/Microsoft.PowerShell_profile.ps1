@@ -19,9 +19,9 @@ foreach($path in $pathsToAdd.GetEnumerator()){
     $ENV:PATH += ";$($path.Value)";
     $pathExists = Test-Path $path.Value;
     if($pathExists){
-        Write-Host " ✔️ Entry added to %PATH%. $($path.Value)";
+        Write-Host " ✔️ %PATH% entry added: $($path.Value)";
     }else {
-        Write-Host " ❌ Entry added to %PATH%, but doesn't exist. $($path.Value)";
+        Write-Host " ❌ %PATH% entry added, but doesn't exist: $($path.Value)";
         if($path.Name -notlike "NotAvailableInChoco*"){
             Write-Host "    💡 Consider running `"choco install $($path.Name)`"";
         }
@@ -38,13 +38,14 @@ $PSSecrets = Get-Content $PSSecretsPath | ConvertFrom-Json;
 
 Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
 $moduleDependencies = @(
-    'NuGet'#,
+    'NuGet',
+    'Az'#,
     #'CosmosDB'
 );
 foreach($moduleDependency in $moduleDependencies){
     [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq $moduleDependency | Measure-Object | Select-Object -ExpandProperty Count)
     if(!$IsInstalled){
-        $errMess = "One or more dependencies is not installed!";
+        $errMess = "One or more dependencies is not installed! Please resolve before running this powershell profile!";
         Write-Host $errMess -ForegroundColor Red;
         Throw $errMess;
     } else {
