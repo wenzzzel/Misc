@@ -1,24 +1,30 @@
 Write-Host "Adding to path variable" -ForegroundColor Blue;
-$pathsToAdd = @(
-    "C:\Program Files\Git\bin"
-    "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
-    "C:\Program Files\nodejs\"
-    "$env:APPDATA\npm"
-    "C:\Program Files\Neovim\bin"
-    "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
-    "C:\Program Files\dotnet"
-    "C:\Program Files\Microsoft\Azure Functions Core Tools\"
-    "C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
-    "C:\ProgramData\chocolatey\lib\mouse-jiggler\tools"
-    "C:\Program Files\Gource"
-)
-foreach($path in $pathsToAdd){
-    $ENV:PATH += ";$path";
-    $pathExists = Test-Path $path;
+# Below hashtable is structured like this:
+# "chocoPackageName" = "Path"
+#
+# Add "NotAvailableInChoco<number>" as chocoPackageName and place in bottom of the list if it's not available in chocolatey
+$pathsToAdd = @{
+    "git" = "C:\Program Files\Git\bin"
+    "nodejs" = "C:\Program Files\nodejs\"
+    "npm" = "$env:APPDATA\npm"
+    "dotnet" = "C:\Program Files\dotnet"
+    "azure-functions-core-tools" = "C:\ProgramData\chocolatey\lib\azure-functions-core-tools\tools"
+    "azure-cli" = "C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
+    "mouse-jiggler" = "C:\ProgramData\chocolatey\lib\mouse-jiggler\tools"
+    "gource" = "C:\Program Files\Gource"
+    "NotAvailableInChoco" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
+    "NotAvailableInChoco2" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
+}
+foreach($path in $pathsToAdd.GetEnumerator()){
+    $ENV:PATH += ";$($path.Value)";
+    $pathExists = Test-Path $path.Value;
     if($pathExists){
-        Write-Host " ✔️ Entry added to %PATH%. $path";
+        Write-Host " ✔️ Entry added to %PATH%. $($path.Value)";
     }else {
-        Write-Host " ❌ Entry added to %PATH%, but doesn't exist. $path";
+        Write-Host " ❌ Entry added to %PATH%, but doesn't exist. $($path.Value)";
+        if($path.Name -notlike "NotAvailableInChoco*"){
+            Write-Host "    💡 Consider running `"choco install $($path.Name)`"";
+        }
     }
 }
 
@@ -42,24 +48,24 @@ foreach($moduleDependency in $moduleDependencies){
         Write-Host $errMess -ForegroundColor Red;
         Throw $errMess;
     } else {
-        Write-Host " ✔️ $moduleDependency" -ForegroundColor Yellow;
+        Write-Host " ✔️ $moduleDependency";
     }
 }
 
 Write-Host "Setting user defined variables" -ForegroundColor Blue;
-Write-Host ' 🔠 $thisRepoRootDir' -ForegroundColor Yellow;
+Write-Host ' 🔠 $thisRepoRootDir' -ForegroundColor Green;
 $thisRepoRootDir = "$PROFILE/../"
-Write-Host ' 🔠 $nvimConfigFile' -ForegroundColor Yellow;
+Write-Host ' 🔠 $nvimConfigFile' -ForegroundColor Green;
 $nvimConfigFile = "$env:LOCALAPPDATA\nvim\init.vim"
-Write-Host ' 🔠 $nvimPluginsFolder' -ForegroundColor Yellow;
+Write-Host ' 🔠 $nvimPluginsFolder' -ForegroundColor Green;
 $nvimPluginsFolder = "$env:OneDriveCommercial\Documents\nvim_plugins"
-Write-Host ' 🔠 $crap' -ForegroundColor Yellow;
+Write-Host ' 🔠 $crap' -ForegroundColor Green;
 $crap = "$env:OneDriveCommercial\Documents\Crap"
-Write-Host ' 🔠 $repos' -ForegroundColor Yellow;
+Write-Host ' 🔠 $repos' -ForegroundColor Green;
 $repos = "$env:userprofile\source\repos"
-Write-Host ' 🔠 $dotnetSecretStore' -ForegroundColor Yellow;
+Write-Host ' 🔠 $dotnetSecretStore' -ForegroundColor Green;
 $dotnetSecretStore = "$env:APPDATA\Microsoft\UserSecrets\"
-Write-Host ' 🔠 $ds' -ForegroundColor Yellow; #Makes sense to have var for this since almost all repos are prefixed with dataservices
+Write-Host ' 🔠 $ds' -ForegroundColor Green; #Makes sense to have var for this since almost all repos are prefixed with dataservices
 $ds = "dataservices"
 
 Write-Host "Creating user defined functions" -ForegroundColor Blue;
