@@ -2,7 +2,7 @@ Write-Host "Adding to path variable" -ForegroundColor Blue;
 $ENV:PATH += ";C:\Program Files\Git\bin";
 $ENV:PATH += ";C:\Program Files\Git\usr\bin"; #This is where openssl.exe is located
 $ENV:PATH += ";C:\Program Files\nodejs\";
-$ENV:PATH += ";C:\Users\ewentzel\AppData\Roaming\npm";
+$ENV:PATH += ";$env:APPDATA\npm";
 $ENV:PATH += ";C:\Program Files\Neovim\bin";
 $ENV:PATH += ";C:\Program Files\azure-documentdb-datamigrationtool-1.8.3";
 $ENV:PATH += ";C:\Program Files\dotnet"
@@ -39,13 +39,13 @@ Write-Host "Setting user defined variables" -ForegroundColor Blue;
 Write-Host ' 🔠 $thisRepoRootDir' -ForegroundColor Yellow;
 $thisRepoRootDir = "$PROFILE/../"
 Write-Host ' 🔠 $nvimConfigFile' -ForegroundColor Yellow;
-$nvimConfigFile = "C:\Users\ewentzel\AppData\Local\nvim\init.vim"
+$nvimConfigFile = "$env:LOCALAPPDATA\nvim\init.vim"
 Write-Host ' 🔠 $nvimPluginsFolder' -ForegroundColor Yellow;
-$nvimPluginsFolder = "C:\Users\ewentzel\OneDrive - Volvo Cars\Documents\nvim_plugins"
+$nvimPluginsFolder = "$env:OneDriveCommercial\Documents\nvim_plugins"
 Write-Host ' 🔠 $crap' -ForegroundColor Yellow;
-$crap = "C:\Users\ewentzel\Crap"
+$crap = "$env:OneDriveCommercial\Documents\Crap"
 Write-Host ' 🔠 $repos' -ForegroundColor Yellow;
-$repos = "C:\Users\ewentzel\source\repos"
+$repos = "$env:userprofile\source\repos"
 Write-Host ' 🔠 $dotnetSecretStore' -ForegroundColor Yellow;
 $dotnetSecretStore = "$env:APPDATA\Microsoft\UserSecrets\"
 Write-Host ' 🔠 $ds' -ForegroundColor Yellow; #Makes sense to have var for this since almost all repos are prefixed with dataservices
