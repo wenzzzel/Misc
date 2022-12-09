@@ -6,7 +6,7 @@ function Grant-PimRole {
     Write-Host "Adding PIM role!" -ForegroundColor Blue;
 
     if($ProductionEnvironment){
-        $RoleDefinitionID = "df2acbbe-5c63-4762-9d97-7130ba4b2941" # Contributor
+        $RoleDefinitionID = "df2acbbe-5c63-4762-9d97-7130ba4b2941" # GRIP_Contributor
         $scope = "/subscriptions/7ec3a5a7-fa2d-4371-b923-796b94aee75d" # Prod subscription
     }else {
         $RoleDefinitionID = "b24988ac-6180-42a0-ab88-20f7382dd24c" # Contributor
