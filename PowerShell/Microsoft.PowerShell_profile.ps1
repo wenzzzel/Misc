@@ -1,15 +1,26 @@
 Write-Host "Adding to path variable" -ForegroundColor Blue;
-$ENV:PATH += ";C:\Program Files\Git\bin";
-$ENV:PATH += ";C:\Program Files\Git\usr\bin"; #This is where openssl.exe is located
-$ENV:PATH += ";C:\Program Files\nodejs\";
-$ENV:PATH += ";$env:APPDATA\npm";
-$ENV:PATH += ";C:\Program Files\Neovim\bin";
-$ENV:PATH += ";C:\Program Files\azure-documentdb-datamigrationtool-1.8.3";
-$ENV:PATH += ";C:\Program Files\dotnet"
-$ENV:PATH += ";C:\Program Files\Microsoft\Azure Functions Core Tools\";
-$ENV:PATH += ";C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin";
-$ENV:PATH += ";C:\ProgramData\chocolatey\lib\mouse-jiggler\tools";
-$ENV:PATH += ";C:\Program Files\Gource";
+$pathsToAdd = @(
+    "C:\Program Files\Git\bin"
+    "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
+    "C:\Program Files\nodejs\"
+    "$env:APPDATA\npm"
+    "C:\Program Files\Neovim\bin"
+    "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
+    "C:\Program Files\dotnet"
+    "C:\Program Files\Microsoft\Azure Functions Core Tools\"
+    "C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
+    "C:\ProgramData\chocolatey\lib\mouse-jiggler\tools"
+    "C:\Program Files\Gource"
+)
+foreach($path in $pathsToAdd){
+    $ENV:PATH += ";$path";
+    $pathExists = Test-Path $path;
+    if($pathExists){
+        Write-Host " ✔️ Entry added to %PATH%. $path";
+    }else {
+        Write-Host " ❌ Entry added to %PATH%, but doesn't exist. $path";
+    }
+}
 
 Write-Host "Loading PSSecrets" -ForegroundColor Blue;
 $PSSecretsPath = "C:\psSecrets.json";
