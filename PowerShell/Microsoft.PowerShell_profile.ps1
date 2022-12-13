@@ -14,6 +14,7 @@ $pathsToAdd = @{
     "gource" = "C:\Program Files\Gource"
     "NotAvailableInChoco" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
     "NotAvailableInChoco2" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
+    "NotAvailableInChoco3" = "C:\Program Files\Neovim\bin"
 }
 foreach($path in $pathsToAdd.GetEnumerator()){
     $ENV:PATH += ";$($path.Value)";
