@@ -12,6 +12,7 @@ $pathsToAdd = @{
     "azure-cli" = "C:\Program Files (x86)\Microsoft SDKs\Azure\CLI2\wbin"
     "mouse-jiggler" = "C:\ProgramData\chocolatey\lib\mouse-jiggler\tools"
     "gource" = "C:\Program Files\Gource"
+    "ServiceBusExplorer" = "C:\ProgramData\chocolatey\lib\ServiceBusExplorer"
     "NotAvailableInChoco" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
     "NotAvailableInChoco2" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
     "NotAvailableInChoco3" = "C:\Program Files\Neovim\bin"
