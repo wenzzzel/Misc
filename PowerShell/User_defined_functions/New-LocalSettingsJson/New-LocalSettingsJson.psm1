@@ -4,7 +4,6 @@
 
 function New-LocalSettingsJson {
     #TODO: Clean up alot
-    #TODO: Figure out Profile name instead of setting placeholder <projectRootFolderName>
     #TODO: Maybe add an alias to this function?
     param (
         [Parameter(Mandatory=$false)][string]$Csproj
@@ -27,7 +26,7 @@ function New-LocalSettingsJson {
 
     $localsettingsFile = "$projectDir/local.settings.json";
     if(Test-Path $localsettingsFile){
-        Write-Host "Launchsettings already exists. Why have you run this command? Do you think I'm a joke you little shit!?"
+        Write-Host "local.settings.json already exists. Why have you run this command? Do you think I'm a joke you little shit!?"
     }else{
         $localsettingsFileContent = '
 {
@@ -36,10 +35,10 @@ function New-LocalSettingsJson {
         "FUNCTIONS_WORKER_RUNTIME": "dotnet",
         "AzureWebJobsStorage": "UseDevelopmentStorage=true"
     }
-}
-        '
+}'
+        
         Write-Host "Creating launchsettings.json";
-        ni -ItemType File -Path $localsettingsFile -Value $localsettingsFileContent;
+        New-Item -ItemType File -Path $localsettingsFile -Value $localsettingsFileContent;
     }
 
     return
