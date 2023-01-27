@@ -13,6 +13,7 @@ $pathsToAdd = @{
     "mouse-jiggler" = "C:\ProgramData\chocolatey\lib\mouse-jiggler\tools"
     "gource" = "C:\Program Files\Gource"
     "ServiceBusExplorer" = "C:\ProgramData\chocolatey\lib\ServiceBusExplorer"
+    "Azurite" = "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\Extensions\Microsoft\Azure Storage Emulator"
     "NotAvailableInChoco" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
     "NotAvailableInChoco2" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
     "NotAvailableInChoco3" = "C:\Program Files\Neovim\bin"
