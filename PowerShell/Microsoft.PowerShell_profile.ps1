@@ -42,8 +42,8 @@ $PSSecrets = Get-Content $PSSecretsPath | ConvertFrom-Json;
 Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
 $moduleDependencies = @(
     'NuGet',
-    'Az'#,
-    #'CosmosDB'
+    'Az',
+    'CosmosDB'
 );
 foreach($moduleDependency in $moduleDependencies){
     [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq $moduleDependency | Measure-Object | Select-Object -ExpandProperty Count)

@@ -2,13 +2,21 @@
 # https://www.powershellgallery.com/packages/CosmosDB/4.1.0
 # https://github.com/PlagueHO/CosmosDB
 
+
+#####################
+# Connect to Cosmos #
+#####################
+
 $primaryKey = ConvertTo-SecureString `
     -String "<Put db primary key here>" `
     -AsPlainText `
     -Force
 
-$cosmosDbContext = New-CosmosDbContext -Account "erikwenzel" -Database "ToDoList" -Key $primaryKey
+$cosmosDbContext = New-CosmosDbContext -Account "emea-servicedata-logic-qa" -Database "emea-servicedata-logic-qa-persistent" -Key $primaryKey
 
+#######################
+# Update a document #
+#######################
 
 $documents = Get-CosmosDbDocument `
     -Context $cosmosDbContext `
@@ -37,4 +45,35 @@ foreach($document in $documents){
         -PartitionKey $sourceDocument.partitionKey `
         -DocumentBody $newDocumentBody `
         > $null
+}
+
+#####################
+# Delete a document #
+#####################
+
+Remove-CosmosDbDocument `
+    -Context $cosmosDbContext `
+    -CollectionId 'servicedata-v2-test' `
+    -Id '6ES016896~1000701' `
+    -PartitionKey 'YV1VW14K23F997480'
+
+##############################
+# Delete a list of documents #
+##############################
+
+$documents = @{
+    "exampleId" = "examplePartitionKey";
+    "exampleId2" = "examplePartitionKey";
+}
+
+foreach($document in $documents.GetEnumerator()){
+    $id = $document.Name;
+    $partitionKey = $document.Value;
+    Write-Host "Updating document with id `"$id`" and partitionKey `"$partitionKey`"";
+
+    Remove-CosmosDbDocument `
+    -Context $cosmosDbContext `
+    -CollectionId 'servicedata-v2-test' `
+    -Id $id `
+    -PartitionKey $partitionKey
 }
