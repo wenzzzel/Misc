@@ -6,6 +6,7 @@ Write-Host "Adding to path variable" -ForegroundColor Blue;
 $pathsToAdd = @{
     "choco" = "C:\ProgramData\chocolatey"
     "git" = "C:\Program Files\Git\bin"
+    "BeyondCompare" = "C:\Program Files\Beyond Compare 4\"
     "nodejs" = "C:\Program Files\nodejs\"
     "npm" = "$env:APPDATA\npm"
     "dotnet" = "C:\Program Files\dotnet"
