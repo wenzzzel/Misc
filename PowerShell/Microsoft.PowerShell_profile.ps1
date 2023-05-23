@@ -5,6 +5,7 @@ Write-Host "Adding to path variable" -ForegroundColor Blue;
 # Add "NotAvailableInChoco<number>" as chocoPackageName and place in bottom of the list if it's not available in chocolatey
 $pathsToAdd = @{
     "choco" = "C:\ProgramData\chocolatey"
+    "postman" = "$env:LocalAppData\Postman"
     "git" = "C:\Program Files\Git\bin"
     "BeyondCompare" = "C:\Program Files\Beyond Compare 4\"
     "nodejs" = "C:\Program Files\nodejs\"
