@@ -18,7 +18,7 @@ $pathsToAdd = @{
     "Azurite" = "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\Extensions\Microsoft\Azure Storage Emulator"
     "NotAvailableInChoco" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
     "NotAvailableInChoco2" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
-    "NotAvailableInChoco3" = "C:\Program Files\Neovim\bin"
+    "neovim" = "C:\tools\neovim\nvim-win64\bin"
 }
 foreach($path in $pathsToAdd.GetEnumerator()){
     $ENV:PATH += ";$($path.Value)";
