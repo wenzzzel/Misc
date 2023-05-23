@@ -4,6 +4,7 @@ Write-Host "Adding to path variable" -ForegroundColor Blue;
 #
 # Add "NotAvailableInChoco<number>" as chocoPackageName and place in bottom of the list if it's not available in chocolatey
 $pathsToAdd = @{
+    "choco" = "C:\ProgramData\chocolatey"
     "git" = "C:\Program Files\Git\bin"
     "nodejs" = "C:\Program Files\nodejs\"
     "npm" = "$env:APPDATA\npm"
@@ -48,9 +49,17 @@ $moduleDependencies = @(
 foreach($moduleDependency in $moduleDependencies){
     [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq $moduleDependency | Measure-Object | Select-Object -ExpandProperty Count)
     if(!$IsInstalled){
-        $errMess = "One or more dependencies is not installed! Please resolve before running this powershell profile!";
-        Write-Host $errMess -ForegroundColor Red;
-        Throw $errMess;
+        Write-Host " ❌ $moduleDependency. Trying to install it..."
+        Install-Module -Name $moduleDependency -Force;
+        Write-Host "Checking that $ModuleDependency was successfully installed"
+        [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq $moduleDependency | Measure-Object | Select-Object -ExpandProperty Count)
+        if(!$IsInstalled){
+            $errMess = "The dependency $moduleDependency could not be found! Please resolve before running this powershell profile!";
+            Write-Host $errMess -ForegroundColor Red;
+            Throw $errMess;
+        } else {
+        Write-Host " ✔️ $moduleDependency";
+    }
     } else {
         Write-Host " ✔️ $moduleDependency";
     }
