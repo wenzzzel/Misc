@@ -82,6 +82,8 @@ Write-Host ' 🔠 $dotnetSecretStore' -ForegroundColor Green;
 $dotnetSecretStore = "$env:APPDATA\Microsoft\UserSecrets\"
 Write-Host ' 🔠 $ds' -ForegroundColor Green; #Makes sense to have var for this since almost all repos are prefixed with dataservices
 $ds = "dataservices"
+Write-Host ' 🔠 $nugetConfigFilePath' -ForegroundColor Green;
+$nugetConfigFilePath = "$env:appdata\nuget\nuget.config"
 
 Write-Host "Creating user defined functions" -ForegroundColor Blue;
 $UserDefinedFunctions = (Get-ChildItem "$thisRepoRootDir/User_defined_functions");
