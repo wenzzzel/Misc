@@ -17,9 +17,9 @@ $pathsToAdd = @{
     "gource" = "C:\Program Files\Gource"
     "ServiceBusExplorer" = "C:\ProgramData\chocolatey\lib\ServiceBusExplorer"
     "Azurite" = "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\Extensions\Microsoft\Azure Storage Emulator"
+    "neovim" = "C:\tools\neovim\nvim-win64\bin"
     "NotAvailableInChoco" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
     "NotAvailableInChoco2" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
-    "neovim" = "C:\tools\neovim\nvim-win64\bin"
 }
 foreach($path in $pathsToAdd.GetEnumerator()){
     $ENV:PATH += ";$($path.Value)";
