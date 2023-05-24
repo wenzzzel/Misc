@@ -98,6 +98,10 @@ foreach($UserDefinedFunction in $UserDefinedFunctions){
     Import-Module $UserDefinedFunction.Name;
 }
 
+Write-Host "Adding Aliases" -ForegroundColor Blue;
+Write-Host " 👥 BeyondCompare = BComp" -ForegroundColor Yellow;
+New-Alias BeyondCompare BComp
+
 #TODO: Create function for generating the functions setting (json list of functions to run) for azure functions project
 
 #TODO: Create function creating local.settings.json (for azure function app projects
