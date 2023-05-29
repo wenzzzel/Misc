@@ -1,10 +1,25 @@
-Write-Host "Adding to path variable" -ForegroundColor Blue;
+Write-Host "Adding general stuff to path variable" -ForegroundColor Blue;
+$pathsToAdd = @{
+    "choco" = "C:\ProgramData\chocolatey"
+    "openssl" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
+    "azureDocumentdbDatamigrationTool" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
+}
+foreach($path in $pathsToAdd.GetEnumerator()){
+    $ENV:PATH += ";$($path.Value)";
+    $pathExists = Test-Path $path.Value;
+    if($pathExists){
+        Write-Host " ✔️ %PATH% entry added: $($path.Value)";
+    }else {
+        Write-Host " ❌ %PATH% entry added, but doesn't exist: $($path.Value)";
+    }
+}
+
+Write-Host "Adding chocolatey packages + path variable" -ForegroundColor Blue;
 # Below hashtable is structured like this:
 # "chocoPackageName" = "Path"
 #
 # Add "NotAvailableInChoco<number>" as chocoPackageName and place in bottom of the list if it's not available in chocolatey
-$pathsToAdd = @{
-    "choco" = "C:\ProgramData\chocolatey"
+$chocoPackages = @{
     "postman" = "$env:LocalAppData\Postman"
     "git" = "C:\Program Files\Git\bin"
     "BeyondCompare" = "C:\Program Files\Beyond Compare 4\"
@@ -18,19 +33,28 @@ $pathsToAdd = @{
     "ServiceBusExplorer" = "C:\ProgramData\chocolatey\lib\ServiceBusExplorer"
     "Azurite" = "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\Extensions\Microsoft\Azure Storage Emulator"
     "neovim" = "C:\tools\neovim\nvim-win64\bin"
-    "NotAvailableInChoco" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
-    "NotAvailableInChoco2" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
 }
-foreach($path in $pathsToAdd.GetEnumerator()){
-    $ENV:PATH += ";$($path.Value)";
-    $pathExists = Test-Path $path.Value;
+foreach($package in $chocoPackages.GetEnumerator()){
+    $ENV:PATH += ";$($package.Value)";
+    $pathExists = Test-Path $package.Value;
     if($pathExists){
-        Write-Host " ✔️ %PATH% entry added: $($path.Value)";
+        Write-Host " ✔️ %PATH% entry added: $($package.Value)";
     }else {
-        Write-Host " ❌ %PATH% entry added, but doesn't exist: $($path.Value)";
-        if($path.Name -notlike "NotAvailableInChoco*"){
-            Write-Host "    💡 Consider running `"choco install $($path.Name)`"";
-        }
+        Write-Host " ❌ %PATH% entry added, but doesn't exis. Consider running `"choco install $($package.Name)`"t. $($package.Value)";
+    }
+}
+
+Write-Host "Checking for npm packages" -ForegroundColor Blue;
+$npmPackages = @(
+    "@angular/cli"
+)
+foreach($package in $npmPackages.GetEnumerator()){
+    $installedPackages = (npm list -g);
+    $packageIsInstalled = $installedPackages -like "*$package*"
+    if($packageIsInstalled){
+        Write-Host " ✔️ $package was already installed";
+    }else {
+        Write-Host " ❌ $package was not installed. Consider running `"npminstall -g $($path.Name)`"";
     }
 }
 
