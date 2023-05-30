@@ -17,8 +17,6 @@ foreach($path in $pathsToAdd.GetEnumerator()){
 Write-Host "Adding chocolatey packages + path variable" -ForegroundColor Blue;
 # Below hashtable is structured like this:
 # "chocoPackageName" = "Path"
-#
-# Add "NotAvailableInChoco<number>" as chocoPackageName and place in bottom of the list if it's not available in chocolatey
 $chocoPackages = @{
     "postman" = "$env:LocalAppData\Postman"
     "git" = "C:\Program Files\Git\bin"
@@ -33,6 +31,7 @@ $chocoPackages = @{
     "ServiceBusExplorer" = "C:\ProgramData\chocolatey\lib\ServiceBusExplorer"
     "Azurite" = "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\Extensions\Microsoft\Azure Storage Emulator"
     "neovim" = "C:\tools\neovim\nvim-win64\bin"
+    "powerbi" = "C:\Program Files\Microsoft Power BI Desktop\bin\"
 }
 foreach($package in $chocoPackages.GetEnumerator()){
     $ENV:PATH += ";$($package.Value)";
@@ -125,6 +124,8 @@ foreach($UserDefinedFunction in $UserDefinedFunctions){
 Write-Host "Adding Aliases" -ForegroundColor Blue;
 Write-Host " 👥 BeyondCompare = BComp"
 New-Alias BeyondCompare BComp
+Write-Host " 👥 powerbi = pbidesktop"
+New-Alias powerbi pbidesktop
 
 #TODO: Create function for generating the functions setting (json list of functions to run) for azure functions project
 
