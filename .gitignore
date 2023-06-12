@@ -7,6 +7,7 @@
 !SQL/*
 !PowerShell/*
 !PowerShell/User_defined_functions/*/*
+!Power_BI/*
 
 #Specifically these
 PowerShell/powershell.config.json
