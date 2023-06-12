@@ -8,9 +8,9 @@ foreach($path in $pathsToAdd.GetEnumerator()){
     $ENV:PATH += ";$($path.Value)";
     $pathExists = Test-Path $path.Value;
     if($pathExists){
-        Write-Host " ✔️ %PATH% entry added: $($path.Value)";
+        Write-Host " ✔️ %PATH% entry added for $($path.Key): $($path.Value)";
     }else {
-        Write-Host " ❌ %PATH% entry added, but doesn't exist: $($path.Value)";
+        Write-Host " ❌ %PATH% entry added for $($path.Key), but doesn't exist: $($path.Value)";
     }
 }
 
@@ -32,14 +32,15 @@ $chocoPackages = @{
     "Azurite" = "C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\Extensions\Microsoft\Azure Storage Emulator"
     "neovim" = "C:\tools\neovim\nvim-win64\bin"
     "powerbi" = "C:\Program Files\Microsoft Power BI Desktop\bin\"
+    "spotify" = "$env:APPDATA\Spotify"
 }
 foreach($package in $chocoPackages.GetEnumerator()){
     $ENV:PATH += ";$($package.Value)";
     $pathExists = Test-Path $package.Value;
     if($pathExists){
-        Write-Host " ✔️ %PATH% entry added: $($package.Value)";
+        Write-Host " ✔️ %PATH% entry added for $($package.Key): $($package.Value)";
     }else {
-        Write-Host " ❌ %PATH% entry added, but doesn't exis. Consider running `"choco install $($package.Name)`"t. $($package.Value)";
+        Write-Host " ❌ %PATH% entry added for $($package.Key), but doesn't exis. Consider running `"choco install $($package.Name)`"t. $($package.Value)";
     }
 }
 
