@@ -4,13 +4,20 @@ $pathsToAdd = @{
     "openssl" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
     "azureDocumentdbDatamigrationTool" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
 }
+$whiteSpaceCount = 40;
 foreach($path in $pathsToAdd.GetEnumerator()){
+    $calculatedWhiteSpaceCount = $whiteSpaceCount - $path.Key.Length
+    $whiteSpaces = "";
+    for ($i = 0; $i -lt $calculatedWhiteSpaceCount; $i++) {
+        $whiteSpaces = $whiteSpaces + " ";
+    }
+
     $ENV:PATH += ";$($path.Value)";
     $pathExists = Test-Path $path.Value;
     if($pathExists){
-        Write-Host " ✔️ %PATH% entry added for $($path.Key): $($path.Value)";
+        Write-Host " ✔️ $($path.Key) $($whiteSpaces) $($path.Value)";
     }else {
-        Write-Host " ❌ %PATH% entry added for $($path.Key), but doesn't exist: $($path.Value)";
+        Write-Host " ❌ $($path.Key) $($whiteSpaces) Doesn't exist. $($path.Value)";
     }
 }
 
@@ -34,13 +41,20 @@ $chocoPackages = @{
     "powerbi" = "C:\Program Files\Microsoft Power BI Desktop\bin\"
     "spotify" = "$env:APPDATA\Spotify"
 }
+$whiteSpaceCount = 40;
 foreach($package in $chocoPackages.GetEnumerator()){
+    $calculatedWhiteSpaceCount = $whiteSpaceCount - $package.Key.Length
+    $whiteSpaces = "";
+    for ($i = 0; $i -lt $calculatedWhiteSpaceCount; $i++) {
+        $whiteSpaces = $whiteSpaces + " ";
+    }
+
     $ENV:PATH += ";$($package.Value)";
     $pathExists = Test-Path $package.Value;
     if($pathExists){
-        Write-Host " ✔️ %PATH% entry added for $($package.Key): $($package.Value)";
+        Write-Host " ✔️ $($package.Key) $($whiteSpaces) $($package.Value)";
     }else {
-        Write-Host " ❌ %PATH% entry added for $($package.Key), but doesn't exis. Consider running `"choco install $($package.Name)`"t. $($package.Value)";
+        Write-Host " ❌ $($package.Key) $($whiteSpaces) Doesn't exist. Run `"choco install $($package.Name)`". $($package.Value)";
     }
 }
 
