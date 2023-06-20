@@ -40,6 +40,7 @@ $chocoPackages = @{
     "neovim" = "C:\tools\neovim\nvim-win64\bin"
     "powerbi" = "C:\Program Files\Microsoft Power BI Desktop\bin\"
     "spotify" = "$env:APPDATA\Spotify"
+    "googlechrome" = "$env:LOCALAPPDATA\Google\Chrome\Application"
 }
 $whiteSpaceCount = 40;
 foreach($package in $chocoPackages.GetEnumerator()){
@@ -141,6 +142,8 @@ Write-Host " 👥 BeyondCompare = BComp"
 New-Alias BeyondCompare BComp
 Write-Host " 👥 powerbi = pbidesktop"
 New-Alias powerbi pbidesktop
+Write-Host " 👥 chrome = googlechrome"
+New-Alias googlechrome chrome
 
 #TODO: Create function for generating the functions setting (json list of functions to run) for azure functions project
 
