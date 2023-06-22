@@ -41,6 +41,7 @@ $chocoPackages = @{
     "powerbi" = "C:\Program Files\Microsoft Power BI Desktop\bin\"
     "spotify" = "$env:APPDATA\Spotify"
     "googlechrome" = "$env:LOCALAPPDATA\Google\Chrome\Application"
+    "powertoys" = "C:\Program Files\PowerToys\"
 }
 $whiteSpaceCount = 40;
 foreach($package in $chocoPackages.GetEnumerator()){
