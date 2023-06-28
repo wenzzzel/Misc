@@ -1,3 +1,17 @@
+$asciiArt = "
+          ____________________________________________         
+_________|                                       _    |________
+\        |   __      _____ _ __  _______________| |   |       /
+ \       |   \ \ /\ / / _ \ '_ \|_  /_  /_  / _ \ |   |      / 
+  \      |    \ V  V /  __/ | | |/ / / / / /  __/ |   |     /  
+  /      |     \_/\_/ \___|_| |_/___/___/___\___|_|   |     \  
+ /       |____________________________________________|      \ 
+/_____________)                                 (_____________\
+                                                                
+";
+
+Write-Host $asciiArt -ForegroundColor Green;
+
 Write-Host "Adding general stuff to path variable" -ForegroundColor Blue;
 $pathsToAdd = @{
     "choco" = "C:\ProgramData\chocolatey"
