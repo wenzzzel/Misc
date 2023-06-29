@@ -56,6 +56,7 @@ $chocoPackages = @{
     "spotify" = "$env:APPDATA\Spotify"
     "googlechrome" = "$env:LOCALAPPDATA\Google\Chrome\Application"
     "powertoys" = "C:\Program Files\PowerToys\"
+    "slack" = "C:\Program Files\Slack\"
 }
 $whiteSpaceCount = 40;
 foreach($package in $chocoPackages.GetEnumerator()){
