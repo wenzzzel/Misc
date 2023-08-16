@@ -77,7 +77,8 @@ foreach($package in $chocoPackages.GetEnumerator()){
 
 Write-Host "Checking for npm packages" -ForegroundColor Blue;
 $npmPackages = @(
-    "@angular/cli"
+    "@angular/cli",
+    "newman"
 )
 foreach($package in $npmPackages.GetEnumerator()){
     $installedPackages = (npm list -g);
@@ -85,7 +86,7 @@ foreach($package in $npmPackages.GetEnumerator()){
     if($packageIsInstalled){
         Write-Host " ✔️ $package was already installed";
     }else {
-        Write-Host " ❌ $package was not installed. Consider running `"npminstall -g $($path.Name)`"";
+        Write-Host " ❌ $package was not installed. Consider running `"npminstall -g $($package)`"";
     }
 }
 
