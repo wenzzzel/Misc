@@ -58,7 +58,6 @@ $chocoPackages = @{
     "powertoys" = "C:\Program Files\PowerToys\"
     "slack" = "C:\Program Files\Slack\"
     "daxstudio" = "C:\Program Files\Dax Studio\"
-    "baretail" = "C:\ProgramData\chocolatey\lib\baretail\tools"
 }
 $whiteSpaceCount = 40;
 foreach($package in $chocoPackages.GetEnumerator()){
@@ -142,8 +141,6 @@ Write-Host ' 🔠 $ds' -ForegroundColor Green; #Makes sense to have var for this
 $ds = "dataservices"
 Write-Host ' 🔠 $nugetConfigFilePath' -ForegroundColor Green;
 $nugetConfigFilePath = "$env:appdata\nuget\nuget.config"
-Write-Host ' 🔠 $embyLogsDir' -ForegroundColor Green;
-$embyLogsDir = "$env:appdata\Emby-Server\programdata\logs"
 
 Write-Host "Creating user defined functions" -ForegroundColor Blue;
 $UserDefinedFunctions = (Get-ChildItem "$thisRepoRootDir/User_defined_functions");
@@ -215,7 +212,7 @@ if($currentDate.Day -gt 20){
         }
         
         if($timeReportDone -eq "N"){
-            Write-Host "     ❌ Please submit your time report. Will ask you again next time!";
+            Write-Host "`a     ❌ Please submit your time report. Will ask you again next time!";
         }
     } else{
         Write-Host "     ✔️ Time report already done this month. Good for you!"
