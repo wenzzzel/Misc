@@ -17,6 +17,7 @@ $pathsToAdd = @{
     "choco" = "C:\ProgramData\chocolatey"
     "openssl" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
     "azureDocumentdbDatamigrationTool" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
+    "servicebus-cli" = "C:\Program Files\servicebus-cli"
 }
 $whiteSpaceCount = 40;
 foreach($path in $pathsToAdd.GetEnumerator()){
