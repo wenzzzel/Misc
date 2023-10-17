@@ -15,7 +15,8 @@ function Grant-PimRole {
     $guid = (New-Guid)
     $startTime = Get-Date -Format o
 
-    New-AzRoleAssignmentScheduleRequest `
+    try {
+        New-AzRoleAssignmentScheduleRequest `
         -Name $guid `
         -Scope $scope `
         -ExpirationDuration PT2H `
@@ -24,27 +25,11 @@ function Grant-PimRole {
         -RequestType SelfActivate `
         -RoleDefinitionId /providersproviders/Microsoft.Management/managementGroups/$managementgroupID/providers/Microsoft.Authorization/roleDefinitions/$roledefinitionId `
         -ScheduleInfoStartDateTime $startTime `
-        -Justification $Justification
-
-    # Comment out below part, since it seems that this subscription is not needed anymore.
-    # Don't dare to fully delete it quite yet though...
-
-    # ###############################
-    # #Add for Test/QA subscription #
-    # ###############################
-    # $RoleDefinitionID = "b24988ac-6180-42a0-ab88-20f7382dd24c" # Contributor
-    # $scope = "/subscriptions/43d4530a-736d-4515-b5c5-e43adbe8c02c" # Non-prod subscription
-    # $guid = (New-Guid)
-    # $startTime = Get-Date -Format o
-
-    # New-AzRoleAssignmentScheduleRequest `
-    # -Name $guid `
-    # -Scope $scope `
-    # -ExpirationDuration PT2H `
-    # -ExpirationType AfterDuration `
-    # -PrincipalId $userObjectID `
-    # -RequestType SelfActivate `
-    # -RoleDefinitionId /providersproviders/Microsoft.Management/managementGroups/$managementgroupID/providers/Microsoft.Authorization/roleDefinitions/$roledefinitionId `
-    # -ScheduleInfoStartDateTime $startTime `
-    # -Justification $Justification
+        -Justification $Justification `
+        -ErrorAction stop
+    }
+    catch {
+        Write-Host "Unsuccessful granting PIM role. A common issues is that the account is not properly connected to Azure. The Azure Powershell module is used for this. Try running Clear-AzContext followed by Connect-AzAccount to reset connection. Full error thrown below:";
+        throw;
+    }
 }
