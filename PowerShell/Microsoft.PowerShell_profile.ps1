@@ -16,7 +16,6 @@ Write-Host "Adding general stuff to path variable" -ForegroundColor Blue;
 $pathsToAdd = @{
     "choco" = "C:\ProgramData\chocolatey"
     "openssl" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
-    "azureDocumentdbDatamigrationTool" = "C:\Program Files\azure-documentdb-datamigrationtool-1.8.3"
     "servicebus-cli" = "C:\Program Files\servicebus-cli"
 }
 $whiteSpaceCount = 40;
@@ -61,6 +60,7 @@ $chocoPackages = @{
     "daxstudio" = "C:\Program Files\Dax Studio\"
     "poshgit" = "C:\tools\poshgit\dahlbyk-posh-git-9bda399\"
     "oh-my-posh" = "C:\Program Files (x86)\oh-my-posh\bin\"
+    "azure-documentdb-data-migration-tool --version=1.8.3.20210809" = "C:\ProgramData\chocolatey\lib\azure-documentdb-data-migration-tool\tools\azure-documentdb-datamigrationtool-1.8.3"
 }
 $whiteSpaceCount = 40;
 foreach($package in $chocoPackages.GetEnumerator()){
@@ -132,6 +132,8 @@ Write-Host ' 🔠 $thisRepoRootDir' -ForegroundColor Green;
 $thisRepoRootDir = "$PROFILE/../"
 Write-Host ' 🔠 $nvimConfigFile' -ForegroundColor Green;
 $nvimConfigFile = "$env:LOCALAPPDATA\nvim\init.vim"
+Write-Host ' 🔠 $nvimConfigFolder' -ForegroundColor Green;
+$nvimConfigFolder = "$env:LOCALAPPDATA\nvim"
 Write-Host ' 🔠 $nvimPluginsFolder' -ForegroundColor Green;
 $nvimPluginsFolder = "$env:OneDriveCommercial\Documents\nvim_plugins"
 Write-Host ' 🔠 $crap' -ForegroundColor Green;
@@ -165,6 +167,8 @@ Write-Host " 👥 powerbi = pbidesktop"
 New-Alias powerbi pbidesktop
 Write-Host " 👥 chrome = googlechrome"
 New-Alias googlechrome chrome
+Write-Host " 👥 azure-documentdb-data-migration-tool = dtui"
+New-Alias azure-documentdb-data-migration-tool dtui.exe
 
 #TODO: Create function for generating the functions setting (json list of functions to run) for azure functions project
 
@@ -239,3 +243,9 @@ if((Test-Path "C:\tools\poshgit\dahlbyk-posh-git-9bda399\") -And (Test-Path "C:\
 } else {
     Write-Host " ❌ Couldn't start posh-git and oh-my-posh because at least one of them was not found." -ForegroundColor Blue;
 }
+
+#Setup nvim Plug
+#TODO: Check if this already exists beofore downloading it. 
+#TODO: Don't have this at the end of the file
+# iwr -useb https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim |`
+#     ni "$(@($env:XDG_DATA_HOME, $env:LOCALAPPDATA)[$null -eq $env:XDG_DATA_HOME])/nvim-data/site/autoload/plug.vim" -Force
