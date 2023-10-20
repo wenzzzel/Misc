@@ -19,6 +19,7 @@ $pathsToAdd = @{
     "servicebus-cli" = "C:\Program Files\servicebus-cli"
 }
 $whiteSpaceCount = 40;
+$pathsToAdd = $pathsToAdd.GetEnumerator() | Sort-Object -Property Key
 foreach($path in $pathsToAdd.GetEnumerator()){
     $calculatedWhiteSpaceCount = $whiteSpaceCount - $path.Key.Length
     $whiteSpaces = "";
@@ -62,6 +63,7 @@ $chocoPackages = @{
     "oh-my-posh" = "C:\Program Files (x86)\oh-my-posh\bin\"
     "azure-documentdb-data-migration-tool --version=1.8.3.20210809" = "C:\ProgramData\chocolatey\lib\azure-documentdb-data-migration-tool\tools\azure-documentdb-datamigrationtool-1.8.3"
 }
+$chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;
 foreach($package in $chocoPackages.GetEnumerator()){
     $calculatedWhiteSpaceCount = $whiteSpaceCount - $package.Key.Length
@@ -84,6 +86,7 @@ $npmPackages = @(
     "@angular/cli",
     "newman"
 )
+$npmPackages = $npmPackages.GetEnumerator() | Sort-Object;
 foreach($package in $npmPackages.GetEnumerator()){
     $installedPackages = (npm list -g);
     $packageIsInstalled = $installedPackages -like "*$package*"
@@ -102,12 +105,13 @@ if(!(Test-Path $PSSecretsPath)){
 }
 $PSSecrets = Get-Content $PSSecretsPath | ConvertFrom-Json;
 
-Write-Host "Making sure dependencies are installed" -ForegroundColor Blue;
+Write-Host "Making sure powershell module dependencies are installed" -ForegroundColor Blue;
 $moduleDependencies = @(
     'NuGet',
     'Az',
     'CosmosDB'
 );
+$moduleDependencies = $moduleDependencies.GetEnumerator() | Sort-Object;
 foreach($moduleDependency in $moduleDependencies){
     [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq $moduleDependency | Measure-Object | Select-Object -ExpandProperty Count)
     if(!$IsInstalled){
@@ -148,7 +152,7 @@ Write-Host ' 🔠 $nugetConfigFilePath' -ForegroundColor Green;
 $nugetConfigFilePath = "$env:appdata\nuget\nuget.config"
 
 Write-Host "Creating user defined functions" -ForegroundColor Blue;
-$UserDefinedFunctions = (Get-ChildItem "$thisRepoRootDir/User_defined_functions");
+$UserDefinedFunctions = (Get-ChildItem "$thisRepoRootDir/User_defined_functions") | Sort-Object;
 $modulePaths = ($env:PSModulePath.Split(";"));
 foreach($UserDefinedFunction in $UserDefinedFunctions){
     Write-Host " ⚙️ $($UserDefinedFunction.Name)" -ForegroundColor Yellow;
