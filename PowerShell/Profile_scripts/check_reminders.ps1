@@ -3,7 +3,7 @@ Write-Host "Checking reminders" -ForegroundColor Blue;
 $statePath = "$thisRepoRootDir/state.json"
 
 if(!(Test-Path $statePath)){
-    Write-Host "No state.json found. Creating it..." -ForegroundColor Blue;
+    Write-Host "No state.json found @ $statePath . Creating it..." -ForegroundColor Blue;
     New-Item -ItemType File -Path $statePath; 
 }
 
@@ -25,7 +25,7 @@ while($timeReportDone -notin "Y", "N"){
 }
 if($timeReportDone -eq "Y"){
     Write-Host "     ✔️ Very good! Will ask again next month";
-    $state.TimeReport = ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString());
+    Add-Member -InputObject $state -Name TimeReport -Value ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString()) -MemberType NoteProperty;
     Set-Content -Value ($state | ConvertTo-Json) -Path $statePath;
 }
 
