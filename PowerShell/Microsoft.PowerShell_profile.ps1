@@ -41,6 +41,7 @@ Write-Host ' 🔠 $nugetConfigFilePath' -ForegroundColor Green;
 $nugetConfigFilePath = "$env:appdata\nuget\nuget.config"
 
 & "$PROFILE/../Profile_Scripts/add_user_defined_functions.ps1";
+& "$PROFILE/../Profile_Scripts/check_reminders.ps1";
 & "$PROFILE/../Profile_Scripts/setup_choco_tab_completion.ps1";
 & "$PROFILE/../Profile_Scripts/activate_posh.ps1";
 & "$PROFILE/../Profile_Scripts/activate_ps_intellisense.ps1";
