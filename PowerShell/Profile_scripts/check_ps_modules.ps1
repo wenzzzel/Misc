@@ -14,7 +14,8 @@ $currentDate = (Get-Date);
 $moduleDependencies = @(
     'NuGet',
     'Az',
-    'CosmosDB'
+    'CosmosDB',
+    'posh-git'
 );
 $moduleDependencies = $moduleDependencies.GetEnumerator() | Sort-Object;
 
@@ -35,6 +36,7 @@ foreach($moduleDependency in $moduleDependencies){
     if(!$IsInstalled){
         Write-Host " ❌ $moduleDependency. Trying to install it..."
         Install-Module -Name $moduleDependency -Force;
+        Import-Module -Name $moduleDependency -Force;
         Write-Host "Checking that $ModuleDependency was successfully installed"
         [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq $moduleDependency | Measure-Object | Select-Object -ExpandProperty Count)
         if(!$IsInstalled){
