@@ -13,3 +13,4 @@
 #Specifically these
 PowerShell/powershell.config.json
 nvim_plugins/
+state.json
