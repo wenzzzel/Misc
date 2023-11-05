@@ -5,8 +5,10 @@ $moduleDependencies = @(
     'CosmosDB'
 );
 $moduleDependencies = $moduleDependencies.GetEnumerator() | Sort-Object;
+$installedModules = Get-InstalledModule | Where-Object -Property Name -In $moduleDependencies;
+
 foreach($moduleDependency in $moduleDependencies){
-    [bool]$IsInstalled = (Get-InstalledModule | Where-Object -Property Name -eq $moduleDependency | Measure-Object | Select-Object -ExpandProperty Count)
+    [bool]$IsInstalled = ($installedModules | Where-Object -Property Name -eq $moduleDependency | Measure-Object | Select-Object -ExpandProperty Count)
     if(!$IsInstalled){
         Write-Host " ❌ $moduleDependency. Trying to install it..."
         Install-Module -Name $moduleDependency -Force;
