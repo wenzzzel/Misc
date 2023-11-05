@@ -3,7 +3,7 @@ Write-Host "Checking reminders" -ForegroundColor Blue;
 $statePath = "$thisRepoRootDir/state.json"
 
 if(!(Test-Path $statePath)){
-    Write-Host "No reminer_state.json found. Creating it..." -ForegroundColor Blue;
+    Write-Host "No state.json found. Creating it..." -ForegroundColor Blue;
     New-Item -ItemType File -Path $statePath; 
 }
 
