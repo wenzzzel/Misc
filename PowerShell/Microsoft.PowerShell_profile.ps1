@@ -25,9 +25,3 @@ Write-Host $asciiArt -ForegroundColor Green;
 & "$PROFILE/../Profile_Scripts/setup_choco_tab_completion.ps1";
 & "$PROFILE/../Profile_Scripts/activate_posh.ps1";
 & "$PROFILE/../Profile_Scripts/activate_ps_intellisense.ps1";
-
-#Setup nvim Plug
-#TODO: Check if this already exists beofore downloading it. 
-#TODO: Don't have this at the end of the file
-# iwr -useb https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim |`
-#     ni "$(@($env:XDG_DATA_HOME, $env:LOCALAPPDATA)[$null -eq $env:XDG_DATA_HOME])/nvim-data/site/autoload/plug.vim" -Force
