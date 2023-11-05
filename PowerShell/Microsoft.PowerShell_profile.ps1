@@ -15,8 +15,8 @@ Write-Host $asciiArt -ForegroundColor Green;
 & "$PROFILE/../Profile_Scripts/add_to_path.ps1";
 & "$PROFILE/../Profile_Scripts/add_choco_packs.ps1";
 & "$PROFILE/../Profile_Scripts/add_npm_packs.ps1";
-& "$PROFILE/../Profile_Scripts/load_ps_secrets.ps1";
 & "$PROFILE/../Profile_Scripts/check_ps_modules.ps1";
+& "$PROFILE/../Profile_Scripts/load_ps_secrets.ps1";
 & "$PROFILE/../Profile_Scripts/add_aliases.ps1";
 & "$PROFILE/../Profile_Scripts/setup_choco_tab_completion.ps1";
 
