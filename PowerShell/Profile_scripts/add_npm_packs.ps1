@@ -39,6 +39,6 @@ foreach($package in $npmPackages.GetEnumerator()){
 }
 
 if($allPackagesInstalled){
-    Add-Member -InputObject $state -Name LastNpmPackCheck -Value ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString() + "-" + $currentDate.Day.ToString()) -MemberType NoteProperty;
+    Add-Member -InputObject $state -Name LastNpmPackCheck -Value ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString() + "-" + $currentDate.Day.ToString()) -MemberType NoteProperty -Force;
     Set-Content -Value ($state | ConvertTo-Json) -Path $statePath;
 }
