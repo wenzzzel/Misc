@@ -22,7 +22,7 @@ $moduleDependencies = $moduleDependencies.GetEnumerator() | Sort-Object;
 if($state.LastPsModuleCheck -eq ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString() + "-" + $currentDate.Day.ToString())){ 
     Write-Host " ⏩ Powershell module dependencies were already checked today, skipping this step until tomorrow...";
     foreach($moduleDependency in $moduleDependencies){
-        Write-Host " ➖ $moduleDependency";
+        Write-Host " ➖ $moduleDependency" -ForegroundColor DarkGray;
     }
 
     return;

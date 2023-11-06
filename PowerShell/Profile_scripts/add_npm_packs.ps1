@@ -21,7 +21,7 @@ $npmPackages = $npmPackages.GetEnumerator() | Sort-Object;
 if($state.LastNpmPackCheck -eq ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString() + "-" + $currentDate.Day.ToString())){ 
     Write-Host " ⏩ Npm package dependencies were already checked today, skipping this step until tomorrow...";
     foreach($package in $npmPackages.GetEnumerator()){
-        Write-Host " ➖ $package";
+        Write-Host " ➖ $package" -ForegroundColor DarkGray;
     }
     return;
 }
