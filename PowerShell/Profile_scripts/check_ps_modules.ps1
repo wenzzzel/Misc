@@ -53,6 +53,6 @@ foreach($moduleDependency in $moduleDependencies){
 }
 
 if($allPackagesInstalled){
-    Add-Member -InputObject $state -Name LastPsModuleCheck -Value ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString() + "-" + $currentDate.Day.ToString()) -MemberType NoteProperty;
+    Add-Member -InputObject $state -Name LastPsModuleCheck -Value ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString() + "-" + $currentDate.Day.ToString()) -MemberType NoteProperty -Force;
     Set-Content -Value ($state | ConvertTo-Json) -Path $statePath;
 }
