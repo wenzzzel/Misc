@@ -8,8 +8,8 @@
 !PowerShell/*
 !PowerShell/Profile_scripts/*
 !PowerShell/User_defined_functions/*/*
-!Power_BI/*
 
 #Specifically these
 PowerShell/powershell.config.json
 nvim_plugins/
+Crap/
