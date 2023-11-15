@@ -3,6 +3,7 @@ $pathsToAdd = @{
     "choco" = "C:\ProgramData\chocolatey"
     "openssl" = "C:\Program Files\Git\usr\bin" #This is where openssl.exe is located
     "servicebus-cli" = "C:\Program Files\servicebus-cli"
+    "outlook" = "C:\Program Files\Microsoft Office\root\Office16\"
 }
 $whiteSpaceCount = 40;
 $pathsToAdd = $pathsToAdd.GetEnumerator() | Sort-Object -Property Key
