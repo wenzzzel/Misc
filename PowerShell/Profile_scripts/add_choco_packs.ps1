@@ -25,6 +25,7 @@ $chocoPackages = @{
     "oh-my-posh" = "C:\Program Files (x86)\oh-my-posh\bin\"
     "azure-documentdb-data-migration-tool --version=1.8.3.20210809" = "C:\ProgramData\chocolatey\lib\azure-documentdb-data-migration-tool\tools\azure-documentdb-datamigrationtool-1.8.3"
     "winrar" = "C:\Program Files\WinRAR\"
+    "gh" = "C:\Program Files\GitHub CLI\"
 }
 $chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;
