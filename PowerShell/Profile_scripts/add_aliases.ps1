@@ -8,4 +8,4 @@ New-Alias googlechrome chrome -Scope Global
 Write-Host " 👥 azure-documentdb-data-migration-tool = dtui"
 New-Alias azure-documentdb-data-migration-tool dtui.exe -Scope Global
 Write-Host " 👥 ask = Invoke-CoPilot"
-New-Alias ask "Invoke-CoPilot" -Scope Global
+New-Alias ask "Invoke-CoPilotCliSuggest" -Scope Global

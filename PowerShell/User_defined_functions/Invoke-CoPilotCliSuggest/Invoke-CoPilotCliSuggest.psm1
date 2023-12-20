@@ -1,4 +1,4 @@
-function Invoke-CoPilot {
+function Invoke-CoPilotCliSuggest {
     param (
         [Parameter(Mandatory=$true)][string]$Question
     )
