@@ -27,6 +27,7 @@ $chocoPackages = @{
     "winrar" = "C:\Program Files\WinRAR\"
     "gh" = "C:\Program Files\GitHub CLI\"
     "lazygit" = "C:\ProgramData\chocolatey\lib\lazygit\tools"
+    "docker" = "C:\ProgramData\chocolatey\lib\docker-cli\bin"
 }
 $chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;
