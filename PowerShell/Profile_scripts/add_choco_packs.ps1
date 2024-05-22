@@ -31,6 +31,7 @@ $chocoPackages = @{
     "docker-desktop" = "C:\ProgramData\chocolatey\lib\docker-desktop"
     "docker-compose" = "C:\ProgramData\chocolatey\lib\docker-compose"
     "docker-engine" = "C:\ProgramData\chocolatey\lib\docker-engine"
+    "azure-data-studio" = "C:\Program Files\Azure Data Studio\"
 }
 $chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;
