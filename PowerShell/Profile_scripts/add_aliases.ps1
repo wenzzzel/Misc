@@ -9,3 +9,5 @@ Write-Host " 👥 azure-documentdb-data-migration-tool = dtui"
 New-Alias azure-documentdb-data-migration-tool dtui.exe -Scope Global
 Write-Host " 👥 ask = Invoke-CoPilot"
 New-Alias ask "Invoke-CoPilotCliSuggest" -Scope Global
+Write-Host " 👥 microsoftazurestorageexplorer = StorageExplorer"
+New-Alias microsoftazurestorageexplorer StorageExplorer -Scope Global
