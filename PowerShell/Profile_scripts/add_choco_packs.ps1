@@ -34,6 +34,7 @@ $chocoPackages = @{
     "azure-data-studio" = "C:\Program Files\Azure Data Studio\"
     "AzCopy10" = "C:\ProgramData\chocolatey\lib\azcopy10\tools\azcopy"
     "microsoftazurestorageexplorer" = "C:\Program Files\Microsoft Azure Storage Explorer\"
+    "terraform" = "C:\ProgramData\chocolatey\lib\terraform\tools"
 }
 $chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;
