@@ -11,3 +11,5 @@ Write-Host " 👥 ask = Invoke-CoPilot"
 New-Alias ask "Invoke-CoPilotCliSuggest" -Scope Global
 Write-Host " 👥 microsoftazurestorageexplorer = StorageExplorer"
 New-Alias microsoftazurestorageexplorer StorageExplorer -Scope Global
+Write-Host " 👥 sql-server-management-studio = ssms"
+New-Alias sql-server-management-studio ssms -Scope Global
