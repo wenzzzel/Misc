@@ -13,3 +13,5 @@ Write-Host " 👥 microsoftazurestorageexplorer = StorageExplorer"
 New-Alias microsoftazurestorageexplorer StorageExplorer -Scope Global
 Write-Host " 👥 sql-server-management-studio = ssms"
 New-Alias sql-server-management-studio ssms -Scope Global
+Write-Host " 👥 linqpad = linqpad8"
+New-Alias linqpad linqpad8 -Scope Global
