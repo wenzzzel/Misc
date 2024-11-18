@@ -36,6 +36,7 @@ $chocoPackages = @{
     "microsoftazurestorageexplorer" = "C:\Program Files\Microsoft Azure Storage Explorer\"
     "terraform" = "C:\ProgramData\chocolatey\lib\terraform\tools"
     "sql-server-management-studio" = "C:\Program Files (x86)\Microsoft SQL Server Management Studio 20\Common7\IDE\"
+    "linqpad" = "C:\Program Files\LINQPad8\"
 }
 $chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;
