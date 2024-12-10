@@ -15,3 +15,5 @@ Write-Host " 👥 sql-server-management-studio = ssms"
 New-Alias sql-server-management-studio ssms -Scope Global
 Write-Host " 👥 linqpad = linqpad8"
 New-Alias linqpad linqpad8 -Scope Global
+Write-Host " 👥 godot = Godot_v4.3-stable_win64"
+New-Alias godot "Godot_v4.3-stable_win64" -Scope Global
