@@ -38,6 +38,7 @@ $chocoPackages = @{
     "sql-server-management-studio" = "C:\Program Files (x86)\Microsoft SQL Server Management Studio 20\Common7\IDE\"
     "linqpad" = "C:\Program Files\LINQPad8\"
     "dotnet-sdk" = "C:\ProgramData\chocolatey\lib\dotnet-sdk"
+    "godot" = "C:\ProgramData\chocolatey\lib\godot\tools\"
 }
 $chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;
