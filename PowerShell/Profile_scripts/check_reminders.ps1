@@ -11,10 +11,9 @@ $state = (Get-Content -Raw $statePath | ConvertFrom-Json);
 
 Write-Host " 🕐 TimeReport reminder";
 $currentDate = (Get-Date);
+$currentWeek = (Get-Date -UFormat %V);
 
-if($currentDate.Day -lt 20){ return; }
-
-if($state.TimeReport -eq ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString())){ 
+if($state.TimeReport -eq ($currentDate.Year.ToString() + "-" + $currentWeek)){ 
     Write-Host " ✔️ Time report already done this month. Good for you!";
     return;
 }
@@ -24,8 +23,8 @@ while($timeReportDone -notin "Y", "N"){
     $timeReportDone = Read-Host -Prompt "Did you do the time report yet? [Y/N]"
 }
 if($timeReportDone -eq "Y"){
-    Write-Host " ✔️ Very good! Will ask again next month";
-    Add-Member -InputObject $state -Name TimeReport -Value ($currentDate.Year.ToString() + "-" + $currentDate.Month.ToString()) -MemberType NoteProperty -Force;
+    Write-Host " ✔️ Very good! Will ask again next week";
+    Add-Member -InputObject $state -Name TimeReport -Value ($currentDate.Year.ToString() + "-" + $currentWeek) -MemberType NoteProperty -Force;
     Set-Content -Value ($state | ConvertTo-Json) -Path $statePath -Force;
 }
 
