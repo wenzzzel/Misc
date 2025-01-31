@@ -14,13 +14,13 @@ $currentDate = (Get-Date);
 $currentWeek = (Get-Date -UFormat %V);
 
 if($state.TimeReport -eq ($currentDate.Year.ToString() + "-" + $currentWeek)){ 
-    Write-Host " ✔️ Time report already done this month. Good for you!";
+    Write-Host " ✔️ Time report already done this week. Good for you!";
     return;
 }
 
 $timeReportDone = "";
 while($timeReportDone -notin "Y", "N"){
-    $timeReportDone = Read-Host -Prompt "Did you do the time report yet? [Y/N]"
+    $timeReportDone = Read-Host -Prompt "Did you do the time report for this week yet? [Y/N]"
 }
 if($timeReportDone -eq "Y"){
     Write-Host " ✔️ Very good! Will ask again next week";
