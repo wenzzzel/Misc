@@ -15,6 +15,7 @@ $npmPackages = @(
     "@angular/cli",
     "newman",
     "@azure/static-web-apps-cli"
+    "azure-functions-core-tools@4"
 )
 $npmPackages = $npmPackages.GetEnumerator() | Sort-Object;
 
