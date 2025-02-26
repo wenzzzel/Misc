@@ -8,7 +8,6 @@ $chocoPackages = @{
     "nodejs" = "C:\Program Files\nodejs\"
     "npm" = "$env:APPDATA\npm"
     "dotnet" = "C:\Program Files\dotnet"
-    "azure-functions-core-tools" = "C:\ProgramData\chocolatey\lib\azure-functions-core-tools\tools"
     "azure-cli" = "C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin" #C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin
     "mouse-jiggler" = "C:\ProgramData\chocolatey\lib\mouse-jiggler\tools"
     "gource" = "C:\Program Files\Gource"
