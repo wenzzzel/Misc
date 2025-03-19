@@ -30,8 +30,14 @@ if($state.LastOnTimeForStandupCheck -eq ($currentDate.Year.ToString() + "-" + $c
         Set-Content -Value ($state | ConvertTo-Json) -Path $statePath -Force;
     }
 }
-$onTimePercentage = ($state.OnTimeForStandupCount / ($state.OnTimeForStandupCount + $state.LateForStandupCount)) * 100;
-Write-Host "    📉 $onTimePercentage%";
+$onTimePercentage = [Math]::Round(($state.OnTimeForStandupCount / ($state.OnTimeForStandupCount + $state.LateForStandupCount)) * 100);
+if ($onTimePercentage -gt 94){
+    Write-Host "    📉 $onTimePercentage%" -ForegroundColor Green
+} elseif ($onTimePercentage -gt 89){
+    Write-Host "    📉 $onTimePercentage%"
+} else {
+    Write-Host "    📉 $onTimePercentage%" -ForegroundColor Red
+}
 
 Write-Host " 🕐 TimeReport reminder";
 $currentWeek = (Get-Date -UFormat %V);
