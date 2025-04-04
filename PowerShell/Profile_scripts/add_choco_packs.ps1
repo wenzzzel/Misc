@@ -38,6 +38,7 @@ $chocoPackages = @{
     "linqpad" = "C:\Program Files\LINQPad8\"
     "dotnet-sdk" = "C:\ProgramData\chocolatey\lib\dotnet-sdk"
     "godot-mono" = "C:\ProgramData\chocolatey\lib\godot-mono\tools\Godot_v4.3-stable_mono_win64"
+    "azure-cosmosdb-emulator" = "C:\Program Files\Azure Cosmos DB Emulator\"
 }
 $chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;

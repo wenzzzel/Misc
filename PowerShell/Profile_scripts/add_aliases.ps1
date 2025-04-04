@@ -17,3 +17,5 @@ Write-Host " 👥 linqpad = linqpad8"
 New-Alias linqpad linqpad8 -Scope Global
 Write-Host " 👥 godot = Godot_v4.3-stable_mono_win64.exe"
 New-Alias godot "Godot_v4.3-stable_mono_win64.exe" -Scope Global
+Write-Host " 👥 cosmosdbemulator = CosmosDB.Emulator.exe"
+New-Alias cosmosdbemulator "CosmosDB.Emulator.exe" -Scope Global
