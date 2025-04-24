@@ -39,6 +39,7 @@ $chocoPackages = @{
     "dotnet-sdk" = "C:\ProgramData\chocolatey\lib\dotnet-sdk"
     "godot-mono" = "C:\ProgramData\chocolatey\lib\godot-mono\tools\Godot_v4.3-stable_mono_win64"
     "azure-cosmosdb-emulator" = "C:\Program Files\Azure Cosmos DB Emulator\"
+    "kubernetes-cli" = "C:\ProgramData\chocolatey\lib\kubernetes-cli\tools\kubernetes\client\bin\" # This is kubectl
 }
 $chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;
