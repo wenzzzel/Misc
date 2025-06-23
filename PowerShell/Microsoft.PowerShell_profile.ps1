@@ -12,6 +12,7 @@ _________|                                       _    |________
 
 Write-Host $asciiArt -ForegroundColor Green;
 
+& "$PROFILE/../Profile_Scripts/set_env_variables.ps1";
 & "$PROFILE/../Profile_Scripts/add_user_defined_variables.ps1";
 & "$PROFILE/../Profile_Scripts/add_to_path.ps1";
 & "$PROFILE/../Profile_Scripts/add_choco_packs.ps1"; 
