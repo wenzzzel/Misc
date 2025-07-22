@@ -1,0 +1,178 @@
+#!/bin/bash
+asciiArt="
+          ____________________________________________         
+_________|                                       _    |________
+\        |   __      _____ _ __  _______________| |   |       /
+ \       |   \ \ /\ / / _ \ '_ \|_  /_  /_  / _ \ |   |      / 
+  \      |    \ V  V /  __/ | | |/ / / / / /  __/ |   |     /  
+  /      |     \_/\_/ \___|_| |_/___/___/___\___|_|   |     \  
+ /       |____________________________________________|      \ 
+/_____________)                                 (_____________\                                                             
+";
+
+echo -e "\e[1;92m$asciiArt\e[0m"
+echo ""
+
+##################################
+# Specific package installations #
+##################################
+
+# Automatically install Mullvad the recommended way
+echo -e "Checking if Mullvad VPN is installed..."
+if dpkg -s mullvad-vpn &> /dev/null; then
+    echo -e "  ✅ Mullvad VPN is already installed!	"
+else
+    # Download the Mullvad signing key
+    echo "  ❌ Mullvad is not installed!"
+    echo "  🔑 Downloading keyring"
+    sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc
+
+    # Add the Mullvad repository server to apt
+    echo "  📁 Adding Mullvad repo"
+    echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable stable main" | sudo tee /etc/apt/sources.list.d/mullvad.list
+
+    # Install the package
+    echo "  🔄 Updating apt"
+    sudo apt update
+    echo "  ⤵️ Installing mullvad-vpn"
+    sudo apt install mullvad-vpn
+
+    # Step 5: Enable and start the Mullvad service
+    echo "  ➕ Enabling and starting Mullvad VPN service..."
+    sudo systemctl enable --now mullvad-daemon
+
+    echo "  ✅ Mullvad VPN installation complete!"
+
+    echo "Configuring Mullvad"
+    mullvad account login <credential>
+    mullvad auto-connect set on
+    mullvad lan set allow
+    mullvad relay set location se
+    mullvad dns set default --block-ads --block-trackers --block-malware --block-gambling
+fi
+echo "  ▶️  Starting Mullvad UI (Unless it's already running)"
+pgrep -f "mullvad-gui" > /dev/null || nohup /opt/Mullvad\ VPN/mullvad-vpn --no-sandbox > /dev/null 2>&1 &
+
+# Automatically install Docker the recommended way
+echo "Checking if Docker is installed..."
+if dpkg -s docker-ce &> /dev/null && \
+   dpkg -s docker-ce-cli &> /dev/null && \
+   dpkg -s containerd.io &> /dev/null && \
+   dpkg -s docker-buildx-plugin &> /dev/null && \
+   dpkg -s docker-compose-plugin &> /dev/null; then
+    echo "  ✅ Docker is already installed. Exiting."
+else
+    echo "  ❌ Docker is not installed!";
+    echo "  🔑 Downloading keyring";
+    # Add Docker's official GPG key:
+    # sudo apt-get update # <-- Can this be removed?
+    # sudo apt-get install ca-certificates curl # <-- Can this be removed?
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+    # Add the Docker repository server to apt
+    echo "  📁 Adding Docker repo"
+    echo \
+     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+     $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+	echo "  🔄 Updating apt"
+    sudo apt-get update
+
+    # Install the packages
+    echo "  ⤵️ Installing Docker packages (docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin)"
+    sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+	echo "  ✅ Docker installation complete!"
+fi
+
+#################################
+# General package installations #
+#################################
+
+echo "Checking misc apt repos"
+
+repos=(
+	"ppa.launchpadcontent.net/dotnet/backports" #microsoft .net repo, needed to install dotnet
+	"https://apt.releases.hashicorp.com" #hashicorps repo, needed to install terraform
+)
+for repo in "${repos[@]}"; do
+	if grep -rq "$repo" /etc/apt/sources.list.d/; then
+		echo "  ✅ $repo"
+	else
+		echo "  ❌ $repo"
+	fi
+done
+
+echo "Checking apt packages"
+applications=(
+	"neovim" 
+	"gnome-characters" 
+	"ibus" 
+	"git" 
+	"make" 
+	"gh" 
+	"curl" 
+	"fzf" 
+	"filezilla"
+	"dotnet-sdk-6.0"
+	"dotnet-sdk-7.0"
+	"dotnet-sdk-8.0"
+	"dotnet-sdk-9.0"
+	"aspnetcore-runtime-6.0"
+	"aspnetcore-runtime-7.0"
+	"aspnetcore-runtime-8.0"
+	"aspnetcore-runtime-9.0"
+	"dotnet-runtime-6.0"
+	"dotnet-runtime-7.0"
+	"dotnet-runtime-8.0"
+	"dotnet-runtime-9.0"	
+	"ca-certificates"	#dependency for .net
+	"libc6"			#dependency for .net
+	"libgcc-s1"		#dependency for .net
+	"libicu74"		#dependency for .net
+	"liblttng-ust1"		#dependency for .net
+	"libssl3"		#dependency for .net
+	"libstdc++6"		#dependency for .net
+	"zlib1g"		#dependency for .net
+	"slack"
+	"terraform"
+	"nodejs"
+)
+for app in "${applications[@]}"; do
+	if dpkg -l | grep -q "$app"; then
+		echo "  ✅ $app"
+	else
+		echo "  ❌ $app"
+		echo "     💡 Run 'sudo apt install $app'"
+		if [ "$app" == "fzf" ]; then
+			echo "     💡 Don't forget to copy the key-bindings to ~/.bashrc. The keybindings can be found in '/usr/share/doc/fzf/examples/key-bindings.bash'"
+		fi
+	fi
+done
+
+echo "Checking snap packages"
+applications=(
+	"copilot-desktop" 
+	"steam" 
+	"code" 
+	"discord"
+	"thunderbird"
+)
+for app in "${applications[@]}"; do
+	if snap list | grep -q "$app"; then
+		echo "  ✅ $app"
+	else
+		echo "  ❌ $app"
+		echo "     💡 Run 'sudo snap install $app'"
+	fi
+done
+
+###############
+# Other stuff #
+###############
+
+echo "Setting environment variables"
+echo "  🌳 ASPNETCORE_ENVIRONMENT=Development"
+export ASPNETCORE_ENVIRONMENT=Development
