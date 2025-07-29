@@ -96,12 +96,15 @@ echo "Checking misc apt repos"
 repos=(
 	"ppa.launchpadcontent.net/dotnet/backports" #microsoft .net repo, needed to install dotnet
 	"https://apt.releases.hashicorp.com" #hashicorps repo, needed to install terraform
+	"ppa.launchpadcontent.net/openrazer/stable" # For Polychromatic razer app
+	"pppa.launchpadcontent.net/polychromatic/stable" # For Polychromatic razer app
 )
 for repo in "${repos[@]}"; do
 	if grep -rq "$repo" /etc/apt/sources.list.d/; then
 		echo "  ✅ $repo"
 	else
 		echo "  ❌ $repo"
+		echo "     💡 Run 'sudo apt-add-repository $repo'"
 	fi
 done
 
@@ -139,6 +142,8 @@ applications=(
 	"slack"
 	"terraform"
 	"nodejs"
+	"openrazer-meta" #Razer drivers (backend)
+	"polychromatic" #Razer drivers (frontend)
 )
 for app in "${applications[@]}"; do
 	if dpkg -l | grep -q "$app"; then
