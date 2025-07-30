@@ -13,6 +13,41 @@ _________|                                       _    |________
 echo -e "\e[1;92m$asciiArt\e[0m"
 echo ""
 
+################
+# MOUNT DRIVES #
+################
+echo "Mounting drives..."
+if ! dpkg -l | grep -q cifs-utils; then
+  echo "  ⤵️ cifs-utils is needed to mount the drives. Installing..."
+  sudo apt install -y cifs-utils > /dev/null 2>&1
+fi
+# Mount Seagate Exos 1 (D: on host)
+if [ ! -d "/mnt/SeagateExos1" ]; then
+  echo "  📁 Creating directory /mnt/SeagateExos1 which will be used to mount the Seagate Exos 1 drive..."
+  sudo mkdir -p /mnt/SeagateExos1
+else
+  echo "  ✅ Directory /mnt/SeagateExos1 already exists. Skipping creation."
+fi
+if ! mountpoint -q /mnt/SeagateExos1; then
+  echo "  🔌 Mounting Seagate Exos 1 drive..."
+  sudo mount -t cifs "//192.168.1.2/SeagateExos1" /mnt/SeagateExos1 -o username="Username",password="Password",uid=1000,gid=1000
+else
+  echo "  ✅ Seagate Exos 1 drive is already mounted. Skipping."
+fi
+# Mount Seagate Exos 2 (F: on host)
+if [ ! -d "/mnt/SeagateExos2" ]; then
+  echo "  📁 Creating directory /mnt/SeagateExos2 which will be used to mount the Seagate Exos 2 drive..."
+  sudo mkdir -p /mnt/SeagateExos2
+else
+  echo "  ✅ Directory /mnt/SeagateExos2 already exists. Skipping creation."
+fi
+if ! mountpoint -q /mnt/SeagateExos2; then
+  echo "  🔌 Mounting Seagate Exos 2 drive..."
+  sudo mount -t cifs "//192.168.1.2/SeagateExos2" /mnt/SeagateExos2 -o username="Username",password="Password",uid=1000,gid=1000
+else
+  echo "  ✅ Seagate Exos 2 drive is already mounted. Skipping."
+fi
+
 ##################################
 # Specific package installations #
 ##################################
@@ -90,14 +125,13 @@ fi
 #################################
 # General package installations #
 #################################
-
 echo "Checking misc apt repos"
 
 repos=(
 	"ppa.launchpadcontent.net/dotnet/backports" #microsoft .net repo, needed to install dotnet
 	"https://apt.releases.hashicorp.com" #hashicorps repo, needed to install terraform
 	"ppa.launchpadcontent.net/openrazer/stable" # For Polychromatic razer app
-	"pppa.launchpadcontent.net/polychromatic/stable" # For Polychromatic razer app
+	"ppa.launchpadcontent.net/polychromatic/stable" # For Polychromatic razer app
 )
 for repo in "${repos[@]}"; do
 	if grep -rq "$repo" /etc/apt/sources.list.d/; then
@@ -177,7 +211,6 @@ done
 ###############
 # Other stuff #
 ###############
-
 echo "Setting environment variables"
 echo "  🌳 ASPNETCORE_ENVIRONMENT=Development"
 export ASPNETCORE_ENVIRONMENT=Development
