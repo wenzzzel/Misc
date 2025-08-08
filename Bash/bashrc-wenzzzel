@@ -198,6 +198,9 @@ applications=(
 	"code" 
 	"discord"
 	"thunderbird"
+	"gimp"
+	"openvino-toolkit-2404" #Used by gimp
+	"openvino-ai-plugins-gimp" # Used by gimp
 )
 for app in "${applications[@]}"; do
 	if snap list | grep -q "$app"; then
@@ -205,6 +208,9 @@ for app in "${applications[@]}"; do
 	else
 		echo "  ❌ $app"
 		echo "     💡 Run 'sudo snap install $app'"
+		if [ "$app" == "gimp" ]; then
+			echo "     💡 Don't forget to add your user to the 'render' group: 'sudo usermod -a -G render erik-wenzel'"
+		fi
 	fi
 done
 
@@ -214,3 +220,7 @@ done
 echo "Setting environment variables"
 echo "  🌳 ASPNETCORE_ENVIRONMENT=Development"
 export ASPNETCORE_ENVIRONMENT=Development
+
+echo "Adding to PATH"
+echo "  ✅ $HOME/Builds/servicebus-cli-0.1.0"
+export PATH="$PATH:$HOME/Builds/servicebus-cli-0.1.0"
