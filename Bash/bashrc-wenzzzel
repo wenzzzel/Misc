@@ -122,6 +122,56 @@ else
 	echo "  ✅ Docker installation complete!"
 fi
 
+# Automatically install kubectl the recommended way
+echo "Checking if kubectl is installed..."
+if dpkg -s kubectl &> /dev/null; then
+    echo "  ✅ kubectl is already installed. Exiting."
+else
+    echo "  ❌ kubectl is not installed!";
+	# Install prerequisites
+	sudo apt update;
+	echo "  ⤵️ Installing prerequisites (apt-transport-https ca-certificates curl gnupg)"
+	sudo apt install -y apt-transport-https ca-certificates curl gnupg;
+
+    echo "  🔑 Downloading keyring";
+	if [ ! -d "/etc/apt/keyrings" ]; then
+		echo "  💬 Creating directory /etc/apt/keyrings which will be used for apt keyrings..."
+		sudo mkdir -p -m 755 /etc/apt/keyrings
+	else
+		echo "  💬 Directory /etc/apt/keyrings already exists. Skipping creation."
+	fi
+	curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+	sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg # allow unprivileged APT programs to read this keyring
+
+    # Add the Kubernetes repository server to apt
+    echo "  📁 Adding Kubernetes repo"
+	# This overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list
+	echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+	sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list   # helps tools such as command-not-found to work correctly
+	
+	echo "  🔄 Updating apt"
+    sudo apt-get update
+
+    # Install the packages
+    echo "  ⤵️ Installing Kubectl package"
+    sudo apt-get install -y kubectl
+
+	echo "  ✅ Kubectl installation complete!"
+fi
+
+# Automatically install minikube the recommended way
+echo "Checking if minikube is installed..."
+if dpkg -s minikube &> /dev/null; then
+    echo "  ✅ minikube is already installed. Exiting."
+else
+	echo "  ❌ minikube is not installed!";
+	# Download the latest minikube release
+	echo "  ⤵️ Downloading minikube"
+	curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+	sudo dpkg -i minikube_latest_amd64.deb
+	echo "  ✅ Minikube installation complete!"
+fi
+
 #################################
 # General package installations #
 #################################
@@ -178,6 +228,8 @@ applications=(
 	"nodejs"
 	"openrazer-meta" #Razer drivers (backend)
 	"polychromatic" #Razer drivers (frontend)
+	"kubectl"
+	"minikube"
 )
 for app in "${applications[@]}"; do
 	if dpkg -l | grep -q "$app"; then
