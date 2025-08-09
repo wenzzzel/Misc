@@ -222,5 +222,5 @@ echo "  🌳 ASPNETCORE_ENVIRONMENT=Development"
 export ASPNETCORE_ENVIRONMENT=Development
 
 echo "Adding to PATH"
-echo "  ✅ $HOME/Builds/servicebus-cli-0.1.0"
-export PATH="$PATH:$HOME/Builds/servicebus-cli-0.1.0"
+echo "  ✅ $HOME/Builds/servicebus-cli-0.1.0/servicebus-cli-linux-x64-0.1.0"
+export PATH="$PATH:$HOME/Builds/servicebus-cli-0.1.0/servicebus-cli-linux-x64-0.1.0"
