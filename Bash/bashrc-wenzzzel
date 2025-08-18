@@ -230,6 +230,8 @@ applications=(
 	"polychromatic" #Razer drivers (frontend)
 	"kubectl"
 	"minikube"
+	"ffmpeg"
+	"flatpak"
 )
 for app in "${applications[@]}"; do
 	if dpkg -l | grep -q "$app"; then
@@ -253,6 +255,7 @@ applications=(
 	"gimp"
 	"openvino-toolkit-2404" #Used by gimp
 	"openvino-ai-plugins-gimp" # Used by gimp
+	"libreoffice"
 )
 for app in "${applications[@]}"; do
 	if snap list | grep -q "$app"; then
@@ -274,5 +277,5 @@ echo "  🌳 ASPNETCORE_ENVIRONMENT=Development"
 export ASPNETCORE_ENVIRONMENT=Development
 
 echo "Adding to PATH"
-echo "  ✅ $HOME/Builds/servicebus-cli-0.1.0/servicebus-cli-linux-x64-0.1.0"
-export PATH="$PATH:$HOME/Builds/servicebus-cli-0.1.0/servicebus-cli-linux-x64-0.1.0"
+echo "  ✅ $HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2"
+export PATH="$PATH:$HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2"
