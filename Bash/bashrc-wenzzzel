@@ -232,6 +232,7 @@ applications=(
 	"minikube"
 	"ffmpeg"
 	"flatpak"
+	"default-jre" #Needed by vscode SonarQube extension. Also had to add the path "/usr/lib/jvm/java-1.21.0-openjdk-amd64" to the vscode user setting "SonarLint.Ls.JavaHome".
 )
 for app in "${applications[@]}"; do
 	if dpkg -l | grep -q "$app"; then
