@@ -233,6 +233,8 @@ applications=(
 	"ffmpeg"
 	"flatpak"
 	"default-jre" #Needed by vscode SonarQube extension. Also had to add the path "/usr/lib/jvm/java-1.21.0-openjdk-amd64" to the vscode user setting "SonarLint.Ls.JavaHome".
+	"gnome-shell-extension-manager" #Needed for managing GNOME Shell extensions
+	"chrome-gnome-shell" #Needed for managing GNOME Shell extensions
 )
 for app in "${applications[@]}"; do
 	if dpkg -l | grep -q "$app"; then
@@ -257,6 +259,7 @@ applications=(
 	"openvino-toolkit-2404" #Used by gimp
 	"openvino-ai-plugins-gimp" # Used by gimp
 	"libreoffice"
+	"spotify"
 )
 for app in "${applications[@]}"; do
 	if snap list | grep -q "$app"; then
