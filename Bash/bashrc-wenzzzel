@@ -172,6 +172,27 @@ else
 	echo "  ✅ Minikube installation complete!"
 fi
 
+# Automatically install azure-functions-core-tools-4 the recommended way
+echo "Checking if azure-functions-core-tools-4 is installed..."
+if dpkg -s azure-functions-core-tools-4 &> /dev/null; then
+    echo "  ✅ azure-functions-core-tools-4 is already installed. Exiting."
+else
+    echo "  ❌ azure-functions-core-tools-4 is not installed!";
+
+    echo "  🔑 Install Microsoft package repository GPG key";
+	curl https://packages.microsoft.com/keys/microsoft.asc &> /dev/null | gpg --dearmor > microsoft.gpg &> /dev/null
+	sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg &> /dev/null
+
+    echo "  📁 Adding dotnetdev repo"
+	sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs 2>/dev/null)-prod $(lsb_release -cs 2>/dev/null) main" > /etc/apt/sources.list.d/dotnetdev.list'
+
+	echo "  🔄 Updating apt"
+	sudo apt-get update &> /dev/null
+    echo "  ⤵️  Installing azure-functions-core-tools-4 package"
+	sudo apt-get install -y azure-functions-core-tools-4 &> /dev/null
+	echo "  ✅ azure-functions-core-tools-4 installation complete!"
+fi
+
 #################################
 # General package installations #
 #################################
