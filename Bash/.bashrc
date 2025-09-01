@@ -251,4 +251,4 @@ bind -m vi-command '"\ec": "\C-z\ec\C-z"'
 bind -m vi-insert '"\ec": "\C-z\ec\C-z"'
 
 # Running custom profile
-source ~/bashrc-wenzzzel
+source /home/erik-wenzel/Source/Misc/Bash/bashrc-wenzzzel

@@ -16,37 +16,37 @@ echo ""
 ################
 # MOUNT DRIVES #
 ################
-echo "Mounting drives..."
-if ! dpkg -l | grep -q cifs-utils; then
-  echo "  ⤵️ cifs-utils is needed to mount the drives. Installing..."
-  sudo apt install -y cifs-utils > /dev/null 2>&1
-fi
-# Mount Seagate Exos 1 (D: on host)
-if [ ! -d "/mnt/SeagateExos1" ]; then
-  echo "  📁 Creating directory /mnt/SeagateExos1 which will be used to mount the Seagate Exos 1 drive..."
-  sudo mkdir -p /mnt/SeagateExos1
-else
-  echo "  ✅ Directory /mnt/SeagateExos1 already exists. Skipping creation."
-fi
-if ! mountpoint -q /mnt/SeagateExos1; then
-  echo "  🔌 Mounting Seagate Exos 1 drive..."
-  sudo mount -t cifs "//192.168.1.2/SeagateExos1" /mnt/SeagateExos1 -o username="Username",password="Password",uid=1000,gid=1000
-else
-  echo "  ✅ Seagate Exos 1 drive is already mounted. Skipping."
-fi
-# Mount Seagate Exos 2 (F: on host)
-if [ ! -d "/mnt/SeagateExos2" ]; then
-  echo "  📁 Creating directory /mnt/SeagateExos2 which will be used to mount the Seagate Exos 2 drive..."
-  sudo mkdir -p /mnt/SeagateExos2
-else
-  echo "  ✅ Directory /mnt/SeagateExos2 already exists. Skipping creation."
-fi
-if ! mountpoint -q /mnt/SeagateExos2; then
-  echo "  🔌 Mounting Seagate Exos 2 drive..."
-  sudo mount -t cifs "//192.168.1.2/SeagateExos2" /mnt/SeagateExos2 -o username="Username",password="Password",uid=1000,gid=1000
-else
-  echo "  ✅ Seagate Exos 2 drive is already mounted. Skipping."
-fi
+# echo "Mounting drives..."
+# if ! dpkg -l | grep -q cifs-utils; then
+#   echo "  ⤵️ cifs-utils is needed to mount the drives. Installing..."
+#   sudo apt install -y cifs-utils > /dev/null 2>&1
+# fi
+# # Mount Seagate Exos 1 (D: on host)
+# if [ ! -d "/mnt/SeagateExos1" ]; then
+#   echo "  📁 Creating directory /mnt/SeagateExos1 which will be used to mount the Seagate Exos 1 drive..."
+#   sudo mkdir -p /mnt/SeagateExos1
+# else
+#   echo "  ✅ Directory /mnt/SeagateExos1 already exists. Skipping creation."
+# fi
+# if ! mountpoint -q /mnt/SeagateExos1; then
+#   echo "  🔌 Mounting Seagate Exos 1 drive..."
+#   sudo mount -t cifs "//192.168.1.2/SeagateExos1" /mnt/SeagateExos1 -o username="Username",password="Password",uid=1000,gid=1000
+# else
+#   echo "  ✅ Seagate Exos 1 drive is already mounted. Skipping."
+# fi
+# # Mount Seagate Exos 2 (F: on host)
+# if [ ! -d "/mnt/SeagateExos2" ]; then
+#   echo "  📁 Creating directory /mnt/SeagateExos2 which will be used to mount the Seagate Exos 2 drive..."
+#   sudo mkdir -p /mnt/SeagateExos2
+# else
+#   echo "  ✅ Directory /mnt/SeagateExos2 already exists. Skipping creation."
+# fi
+# if ! mountpoint -q /mnt/SeagateExos2; then
+#   echo "  🔌 Mounting Seagate Exos 2 drive..."
+#   sudo mount -t cifs "//192.168.1.2/SeagateExos2" /mnt/SeagateExos2 -o username="Username",password="Password",uid=1000,gid=1000
+# else
+#   echo "  ✅ Seagate Exos 2 drive is already mounted. Skipping."
+# fi
 
 ##################################
 # Specific package installations #
@@ -79,7 +79,7 @@ else
     echo "  ✅ Mullvad VPN installation complete!"
 
     echo "Configuring Mullvad"
-    mullvad account login <credential>
+    mullvad account login $MULLVAD_LOGIN
     mullvad auto-connect set on
     mullvad lan set allow
     mullvad relay set location se
@@ -196,7 +196,7 @@ fi
 #################################
 # General package installations #
 #################################
-echo "Checking misc apt repos"
+echo -e "\e[1mChecking misc apt repos\e[0m"
 
 repos=(
 	"ppa.launchpadcontent.net/dotnet/backports" #microsoft .net repo, needed to install dotnet
@@ -206,14 +206,14 @@ repos=(
 )
 for repo in "${repos[@]}"; do
 	if grep -rq "$repo" /etc/apt/sources.list.d/; then
-		echo "  ✅ $repo"
+		echo -e "  📁 \e[3m$repo\e[0m"
 	else
-		echo "  ❌ $repo"
-		echo "     💡 Run 'sudo apt-add-repository $repo'"
+		echo -e "  ❌ \e[3m$repo\e[0m"
+		echo -e "     💡 \e[3mRun 'sudo apt-add-repository $repo'\e[0m"
 	fi
 done
 
-echo "Checking apt packages"
+echo -e "\e[1mChecking apt packages\e[0m"
 applications=(
 	"neovim" 
 	"gnome-characters" 
@@ -256,20 +256,21 @@ applications=(
 	"default-jre" #Needed by vscode SonarQube extension. Also had to add the path "/usr/lib/jvm/java-1.21.0-openjdk-amd64" to the vscode user setting "SonarLint.Ls.JavaHome".
 	"gnome-shell-extension-manager" #Needed for managing GNOME Shell extensions
 	"chrome-gnome-shell" #Needed for managing GNOME Shell extensions
+	"usb-creator-gtk" #Used to burn iso images to usb
 )
 for app in "${applications[@]}"; do
 	if dpkg -l | grep -q "$app"; then
-		echo "  ✅ $app"
+		echo -e "  💿 \e[3m$app\e[0m"
 	else
-		echo "  ❌ $app"
-		echo "     💡 Run 'sudo apt install $app'"
+		echo -e "  ❌ \e[3m$app\e[0m"
+		echo -e "     💡 \e[3mRun 'sudo apt install $app'\e[0m"
 		if [ "$app" == "fzf" ]; then
-			echo "     💡 Don't forget to copy the key-bindings to ~/.bashrc. The keybindings can be found in '/usr/share/doc/fzf/examples/key-bindings.bash'"
+			echo -e "     💡 Don't forget to copy the key-bindings to ~/.bashrc. The keybindings can be found in '/usr/share/doc/fzf/examples/key-bindings.bash'"
 		fi
 	fi
 done
 
-echo "Checking snap packages"
+echo -e "\e[1mChecking snap packages\e[0m"
 applications=(
 	"copilot-desktop" 
 	"steam" 
@@ -281,26 +282,39 @@ applications=(
 	"openvino-ai-plugins-gimp" # Used by gimp
 	"libreoffice"
 	"spotify"
+	"pinta"
 )
 for app in "${applications[@]}"; do
 	if snap list | grep -q "$app"; then
-		echo "  ✅ $app"
+		echo -e "  📀 \e[3m$app\e[0m"
 	else
-		echo "  ❌ $app"
-		echo "     💡 Run 'sudo snap install $app'"
+		echo -e "  ❌ \e[3m$app\e[0m"
+		echo -e "     💡 \e[3mRun 'sudo snap install $app'\e[0m"
 		if [ "$app" == "gimp" ]; then
-			echo "     💡 Don't forget to add your user to the 'render' group: 'sudo usermod -a -G render erik-wenzel'"
+			echo -e "     💡 Don't forget to add your user to the 'render' group: 'sudo usermod -a -G render erik-wenzel'"
 		fi
 	fi
 done
 
-###############
-# Other stuff #
-###############
-echo "Setting environment variables"
-echo "  🌳 ASPNETCORE_ENVIRONMENT=Development"
+#################
+# ENV VARIABLES #
+#################
+echo -e "\e[1mSetting environment variables\e[0m"
+echo -e "  🌳 \e[3mASPNETCORE_ENVIRONMENT=Development\e[0m"
 export ASPNETCORE_ENVIRONMENT=Development
+echo -e "  🌳 \e[3mAZURE_FUNCTIONS_ENVIRONMENT=Development\e[0m"
+export AZURE_FUNCTIONS_ENVIRONMENT=Development
 
-echo "Adding to PATH"
-echo "  ✅ $HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2"
+###############
+# ADD TO PATH #
+###############
+echo -e "\e[1mAdding to PATH\e[0m"
+echo -e "  🔠 \e[3m$HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2\e[0m"
 export PATH="$PATH:$HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2"
+
+#################################
+# ADDING USER DEFINED FUNCTIONS #
+#################################
+echo -e "\e[1mLoading user defined functions\e[0m"
+echo -e "  ⚙️  \e[3mfcr\e[0m"
+source /home/erik-wenzel/Source/Misc/Bash/find-code-repo.sh
