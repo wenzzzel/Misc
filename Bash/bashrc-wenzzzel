@@ -315,6 +315,8 @@ export PATH="$PATH:$HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.
 #################################
 # ADDING USER DEFINED FUNCTIONS #
 #################################
-echo -e "⚙️ \e[1mLoading user defined functions\e[0m"
-echo -e "   ✔️  \e[3;38;5;250mfcr\e[0m"
+echo -e "⚙️  \e[1mLoading user defined functions\e[0m"
+echo -e "   ✔️  \e[3;38;5;250mfind_code_repo (fcr)\e[0m"
 source /home/erik-wenzel/Source/Misc/Bash/find-code-repo.sh
+echo -e "   ✔️  \e[3;38;5;250mget_vehicle_cache_record (gvcr)\e[0m"
+source /home/erik-wenzel/Source/Misc/Bash/get-vehicle-cache-record.sh

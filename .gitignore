@@ -17,3 +17,4 @@ nvim_plugins/
 Crap/
 state.json
 githubrepos.json
+Bash/.env.secrets
