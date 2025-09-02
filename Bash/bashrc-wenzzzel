@@ -18,34 +18,34 @@ echo ""
 ################
 # echo "Mounting drives..."
 # if ! dpkg -l | grep -q cifs-utils; then
-#   echo "  ⤵️ cifs-utils is needed to mount the drives. Installing..."
+#   echo "   ⤵️ cifs-utils is needed to mount the drives. Installing..."
 #   sudo apt install -y cifs-utils > /dev/null 2>&1
 # fi
 # # Mount Seagate Exos 1 (D: on host)
 # if [ ! -d "/mnt/SeagateExos1" ]; then
-#   echo "  📁 Creating directory /mnt/SeagateExos1 which will be used to mount the Seagate Exos 1 drive..."
+#   echo "   📁 Creating directory /mnt/SeagateExos1 which will be used to mount the Seagate Exos 1 drive..."
 #   sudo mkdir -p /mnt/SeagateExos1
 # else
-#   echo "  ✅ Directory /mnt/SeagateExos1 already exists. Skipping creation."
+#   echo "   ✅ Directory /mnt/SeagateExos1 already exists. Skipping creation."
 # fi
 # if ! mountpoint -q /mnt/SeagateExos1; then
-#   echo "  🔌 Mounting Seagate Exos 1 drive..."
+#   echo "   🔌 Mounting Seagate Exos 1 drive..."
 #   sudo mount -t cifs "//192.168.1.2/SeagateExos1" /mnt/SeagateExos1 -o username="Username",password="Password",uid=1000,gid=1000
 # else
-#   echo "  ✅ Seagate Exos 1 drive is already mounted. Skipping."
+#   echo "   ✅ Seagate Exos 1 drive is already mounted. Skipping."
 # fi
 # # Mount Seagate Exos 2 (F: on host)
 # if [ ! -d "/mnt/SeagateExos2" ]; then
-#   echo "  📁 Creating directory /mnt/SeagateExos2 which will be used to mount the Seagate Exos 2 drive..."
+#   echo "   📁 Creating directory /mnt/SeagateExos2 which will be used to mount the Seagate Exos 2 drive..."
 #   sudo mkdir -p /mnt/SeagateExos2
 # else
-#   echo "  ✅ Directory /mnt/SeagateExos2 already exists. Skipping creation."
+#   echo "   ✅ Directory /mnt/SeagateExos2 already exists. Skipping creation."
 # fi
 # if ! mountpoint -q /mnt/SeagateExos2; then
-#   echo "  🔌 Mounting Seagate Exos 2 drive..."
+#   echo "   🔌 Mounting Seagate Exos 2 drive..."
 #   sudo mount -t cifs "//192.168.1.2/SeagateExos2" /mnt/SeagateExos2 -o username="Username",password="Password",uid=1000,gid=1000
 # else
-#   echo "  ✅ Seagate Exos 2 drive is already mounted. Skipping."
+#   echo "   ✅ Seagate Exos 2 drive is already mounted. Skipping."
 # fi
 
 ##################################
@@ -53,30 +53,30 @@ echo ""
 ##################################
 
 # Automatically install Mullvad the recommended way
-echo -e "Checking if Mullvad VPN is installed..."
+echo -e "🐹 \e[1mChecking if Mullvad VPN is installed\e[0m"
 if dpkg -s mullvad-vpn &> /dev/null; then
-    echo -e "  ✅ Mullvad VPN is already installed!	"
+    echo -e "   ✔️  \e[3;38;5;250mMullvad VPN is already installed!\e[0m"
 else
     # Download the Mullvad signing key
-    echo "  ❌ Mullvad is not installed!"
-    echo "  🔑 Downloading keyring"
+    echo "   ❌ Mullvad is not installed!"
+    echo "   🔑 Downloading keyring"
     sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc
 
     # Add the Mullvad repository server to apt
-    echo "  📁 Adding Mullvad repo"
+    echo "   📁 Adding Mullvad repo"
     echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable stable main" | sudo tee /etc/apt/sources.list.d/mullvad.list
 
     # Install the package
-    echo "  🔄 Updating apt"
+    echo "   🔄 Updating apt"
     sudo apt update
-    echo "  ⤵️ Installing mullvad-vpn"
+    echo "   ⤵️ Installing mullvad-vpn"
     sudo apt install mullvad-vpn
 
     # Step 5: Enable and start the Mullvad service
-    echo "  ➕ Enabling and starting Mullvad VPN service..."
+    echo "   ➕ Enabling and starting Mullvad VPN service..."
     sudo systemctl enable --now mullvad-daemon
 
-    echo "  ✅ Mullvad VPN installation complete!"
+    echo "   ✅ Mullvad VPN installation complete!"
 
     echo "Configuring Mullvad"
     mullvad account login $MULLVAD_LOGIN
@@ -85,20 +85,20 @@ else
     mullvad relay set location se
     mullvad dns set default --block-ads --block-trackers --block-malware --block-gambling
 fi
-echo "  ▶️  Starting Mullvad UI (Unless it's already running)"
+echo -e "   ▶️  \e[3;38;5;250mStarting Mullvad UI (Unless it's already running)\e[0m"
 pgrep -f "mullvad-gui" > /dev/null || nohup /opt/Mullvad\ VPN/mullvad-vpn --no-sandbox > /dev/null 2>&1 &
 
 # Automatically install Docker the recommended way
-echo "Checking if Docker is installed..."
+echo -e "🐋 \e[1mChecking if Docker is installed\e[0m"
 if dpkg -s docker-ce &> /dev/null && \
    dpkg -s docker-ce-cli &> /dev/null && \
    dpkg -s containerd.io &> /dev/null && \
    dpkg -s docker-buildx-plugin &> /dev/null && \
    dpkg -s docker-compose-plugin &> /dev/null; then
-    echo "  ✅ Docker is already installed. Exiting."
+    echo -e "   ✔️  \e[3;38;5;250mDocker is already installed!\e[0m"
 else
-    echo "  ❌ Docker is not installed!";
-    echo "  🔑 Downloading keyring";
+    echo "   ❌ Docker is not installed!";
+    echo "   🔑 Downloading keyring";
     # Add Docker's official GPG key:
     # sudo apt-get update # <-- Can this be removed?
     # sudo apt-get install ca-certificates curl # <-- Can this be removed?
@@ -107,96 +107,96 @@ else
     sudo chmod a+r /etc/apt/keyrings/docker.asc
 
     # Add the Docker repository server to apt
-    echo "  📁 Adding Docker repo"
+    echo "   📁 Adding Docker repo"
     echo \
      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
      $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-	echo "  🔄 Updating apt"
+	echo "   🔄 Updating apt"
     sudo apt-get update
 
     # Install the packages
-    echo "  ⤵️ Installing Docker packages (docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin)"
+    echo "   ⤵️ Installing Docker packages (docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin)"
     sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-	echo "  ✅ Docker installation complete!"
+	echo "   ✅ Docker installation complete!"
 fi
 
 # Automatically install kubectl the recommended way
-echo "Checking if kubectl is installed..."
+echo -e "🛠️  \e[1mChecking if kubectl is installed\e[0m"
 if dpkg -s kubectl &> /dev/null; then
-    echo "  ✅ kubectl is already installed. Exiting."
+    echo -e "   ✔️  \e[3;38;5;250mkubectl is already installed!\e[0m"
 else
-    echo "  ❌ kubectl is not installed!";
+    echo "   ❌ kubectl is not installed!";
 	# Install prerequisites
 	sudo apt update;
-	echo "  ⤵️ Installing prerequisites (apt-transport-https ca-certificates curl gnupg)"
+	echo "   ⤵️ Installing prerequisites (apt-transport-https ca-certificates curl gnupg)"
 	sudo apt install -y apt-transport-https ca-certificates curl gnupg;
 
-    echo "  🔑 Downloading keyring";
+    echo "   🔑 Downloading keyring";
 	if [ ! -d "/etc/apt/keyrings" ]; then
-		echo "  💬 Creating directory /etc/apt/keyrings which will be used for apt keyrings..."
+		echo "   💬 Creating directory /etc/apt/keyrings which will be used for apt keyrings..."
 		sudo mkdir -p -m 755 /etc/apt/keyrings
 	else
-		echo "  💬 Directory /etc/apt/keyrings already exists. Skipping creation."
+		echo "   💬 Directory /etc/apt/keyrings already exists. Skipping creation."
 	fi
 	curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 	sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg # allow unprivileged APT programs to read this keyring
 
     # Add the Kubernetes repository server to apt
-    echo "  📁 Adding Kubernetes repo"
+    echo "   📁 Adding Kubernetes repo"
 	# This overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list
 	echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 	sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list   # helps tools such as command-not-found to work correctly
 	
-	echo "  🔄 Updating apt"
+	echo "   🔄 Updating apt"
     sudo apt-get update
 
     # Install the packages
-    echo "  ⤵️ Installing Kubectl package"
+    echo "   ⤵️ Installing Kubectl package"
     sudo apt-get install -y kubectl
 
-	echo "  ✅ Kubectl installation complete!"
+	echo "   ✅ Kubectl installation complete!"
 fi
 
 # Automatically install minikube the recommended way
-echo "Checking if minikube is installed..."
+echo -e "🔨 \e[1mChecking if minikube is installed\e[0m"
 if dpkg -s minikube &> /dev/null; then
-    echo "  ✅ minikube is already installed. Exiting."
+    echo -e "   ✔️  \e[3;38;5;250mminikube is already installed!\e[0m"
 else
-	echo "  ❌ minikube is not installed!";
+	echo "   ❌ minikube is not installed!";
 	# Download the latest minikube release
-	echo "  ⤵️ Downloading minikube"
+	echo "   ⤵️ Downloading minikube"
 	curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
 	sudo dpkg -i minikube_latest_amd64.deb
-	echo "  ✅ Minikube installation complete!"
+	echo "   ✅ Minikube installation complete!"
 fi
 
 # Automatically install azure-functions-core-tools-4 the recommended way
-echo "Checking if azure-functions-core-tools-4 is installed..."
+echo -e "🌩️  \e[1mChecking if azure-functions-core-tools-4 is installed\e[0m"
 if dpkg -s azure-functions-core-tools-4 &> /dev/null; then
-    echo "  ✅ azure-functions-core-tools-4 is already installed. Exiting."
+    echo -e "   ✔️  \e[3;38;5;250mazure-functions-core-tools-4 is already installed!\e[0m"
 else
-    echo "  ❌ azure-functions-core-tools-4 is not installed!";
+    echo "   ❌ azure-functions-core-tools-4 is not installed!";
 
-    echo "  🔑 Install Microsoft package repository GPG key";
+    echo "   🔑 Install Microsoft package repository GPG key";
 	curl https://packages.microsoft.com/keys/microsoft.asc &> /dev/null | gpg --dearmor > microsoft.gpg &> /dev/null
 	sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg &> /dev/null
 
-    echo "  📁 Adding dotnetdev repo"
+    echo "   📁 Adding dotnetdev repo"
 	sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs 2>/dev/null)-prod $(lsb_release -cs 2>/dev/null) main" > /etc/apt/sources.list.d/dotnetdev.list'
 
-	echo "  🔄 Updating apt"
+	echo "   🔄 Updating apt"
 	sudo apt-get update &> /dev/null
-    echo "  ⤵️  Installing azure-functions-core-tools-4 package"
+    echo "   ⤵️  Installing azure-functions-core-tools-4 package"
 	sudo apt-get install -y azure-functions-core-tools-4 &> /dev/null
-	echo "  ✅ azure-functions-core-tools-4 installation complete!"
+	echo "   ✅ azure-functions-core-tools-4 installation complete!"
 fi
 
 #################################
 # General package installations #
 #################################
-echo -e "\e[1mChecking misc apt repos\e[0m"
+echo -e "📁 \e[1mChecking misc apt repos\e[0m"
 
 repos=(
 	"ppa.launchpadcontent.net/dotnet/backports" #microsoft .net repo, needed to install dotnet
@@ -206,14 +206,14 @@ repos=(
 )
 for repo in "${repos[@]}"; do
 	if grep -rq "$repo" /etc/apt/sources.list.d/; then
-		echo -e "  📁 \e[3m$repo\e[0m"
+		echo -e "   ✔️  \e[3;38;5;250m$repo\e[0m"
 	else
-		echo -e "  ❌ \e[3m$repo\e[0m"
-		echo -e "     💡 \e[3mRun 'sudo apt-add-repository $repo'\e[0m"
+		echo -e "   ❌ \e[3;38;5;250m$repo\e[0m"
+		echo -e "      💡 \e[3;38;5;250mRun 'sudo apt-add-repository $repo'\e[0m"
 	fi
 done
 
-echo -e "\e[1mChecking apt packages\e[0m"
+echo -e "💿 \e[1mChecking apt packages\e[0m"
 applications=(
 	"neovim" 
 	"gnome-characters" 
@@ -260,17 +260,17 @@ applications=(
 )
 for app in "${applications[@]}"; do
 	if dpkg -l | grep -q "$app"; then
-		echo -e "  💿 \e[3m$app\e[0m"
+		echo -e "   ✔️  \e[3;38;5;250m$app\e[0m"
 	else
-		echo -e "  ❌ \e[3m$app\e[0m"
-		echo -e "     💡 \e[3mRun 'sudo apt install $app'\e[0m"
+		echo -e "   ❌ \e[3;38;5;250m$app\e[0m"
+		echo -e "      💡 \e[3;38;5;250mRun 'sudo apt install $app'\e[0m"
 		if [ "$app" == "fzf" ]; then
-			echo -e "     💡 Don't forget to copy the key-bindings to ~/.bashrc. The keybindings can be found in '/usr/share/doc/fzf/examples/key-bindings.bash'"
+			echo -e "      💡 Don't forget to copy the key-bindings to ~/.bashrc. The keybindings can be found in '/usr/share/doc/fzf/examples/key-bindings.bash'"
 		fi
 	fi
 done
 
-echo -e "\e[1mChecking snap packages\e[0m"
+echo -e "📀 \e[1mChecking snap packages\e[0m"
 applications=(
 	"copilot-desktop" 
 	"steam" 
@@ -286,12 +286,12 @@ applications=(
 )
 for app in "${applications[@]}"; do
 	if snap list | grep -q "$app"; then
-		echo -e "  📀 \e[3m$app\e[0m"
+		echo -e "   ✔️  \e[3;38;5;250m$app\e[0m"
 	else
-		echo -e "  ❌ \e[3m$app\e[0m"
-		echo -e "     💡 \e[3mRun 'sudo snap install $app'\e[0m"
+		echo -e "   ❌ \e[3;38;5;250m$app\e[0m"
+		echo -e "      💡 \e[3;38;5;250mRun 'sudo snap install $app'\e[0m"
 		if [ "$app" == "gimp" ]; then
-			echo -e "     💡 Don't forget to add your user to the 'render' group: 'sudo usermod -a -G render erik-wenzel'"
+			echo -e "      💡 Don't forget to add your user to the 'render' group: 'sudo usermod -a -G render erik-wenzel'"
 		fi
 	fi
 done
@@ -299,22 +299,22 @@ done
 #################
 # ENV VARIABLES #
 #################
-echo -e "\e[1mSetting environment variables\e[0m"
-echo -e "  🌳 \e[3mASPNETCORE_ENVIRONMENT=Development\e[0m"
+echo -e "🌳 \e[1mSetting environment variables\e[0m"
+echo -e "   ✔️  \e[3;38;5;250mASPNETCORE_ENVIRONMENT=Development\e[0m"
 export ASPNETCORE_ENVIRONMENT=Development
-echo -e "  🌳 \e[3mAZURE_FUNCTIONS_ENVIRONMENT=Development\e[0m"
+echo -e "   ✔️  \e[3;38;5;250mAZURE_FUNCTIONS_ENVIRONMENT=Development\e[0m"
 export AZURE_FUNCTIONS_ENVIRONMENT=Development
 
 ###############
 # ADD TO PATH #
 ###############
-echo -e "\e[1mAdding to PATH\e[0m"
-echo -e "  🔠 \e[3m$HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2\e[0m"
+echo -e "🔠 \e[1mAdding to PATH\e[0m"
+echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2\e[0m"
 export PATH="$PATH:$HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2"
 
 #################################
 # ADDING USER DEFINED FUNCTIONS #
 #################################
-echo -e "\e[1mLoading user defined functions\e[0m"
-echo -e "  ⚙️  \e[3mfcr\e[0m"
+echo -e "⚙️ \e[1mLoading user defined functions\e[0m"
+echo -e "   ✔️  \e[3;38;5;250mfcr\e[0m"
 source /home/erik-wenzel/Source/Misc/Bash/find-code-repo.sh
