@@ -232,7 +232,7 @@ applications=(
 	"dotnet-runtime-6.0"
 	"dotnet-runtime-7.0"
 	"dotnet-runtime-8.0"
-	"dotnet-runtime-9.0"	
+	"dotnet-runtime-9.0"
 	"ca-certificates"	#dependency for .net
 	"libc6"			#dependency for .net
 	"libgcc-s1"		#dependency for .net
@@ -256,6 +256,7 @@ applications=(
 	"usb-creator-gtk" #Used to burn iso images to usb
 	"git-filter-repo" #Used to clean up history in commits
 	"cifs-utils" #Used for mounting CIFS shares
+	"redis"
 )
 for app in "${applications[@]}"; do
 	if dpkg -l | grep -q "$app"; then
