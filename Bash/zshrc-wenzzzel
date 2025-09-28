@@ -1,8 +1,5 @@
 #!/bin/zsh
 
-# Disable Powerlevel10k instant prompt to avoid console output warnings
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=off
-
 # Get script directory before entering function (where %N works correctly)
 SCRIPT_DIR="$(cd "$(dirname "${(%):-%N}")" && pwd)"
 
@@ -14,8 +11,6 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting azure docker docker-compose dotnet)
 # Source Oh My Zsh if it exists
 [[ -d "$ZSH" ]] && source $ZSH/oh-my-zsh.sh
-# Source Powerlevel10k config if it exists
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 # Function to run all setup tasks after Oh My Zsh initialization
 setup_environment() {
@@ -444,16 +439,34 @@ setup_environment() {
     source /home/erik-wenzel/Source/Misc/Bash/get-cache-record.sh
 }
 
-# Use precmd hook to run setup after Oh My Zsh initialization, but only once
-setup_environment_once() {
-    if [[ -z "$ZSHRC_SETUP_DONE" ]]; then
-        export ZSHRC_SETUP_DONE=1
+# Function to run setup after instant prompt completes
+run_setup_after_instant_prompt() {
+    local setup_flag_file="$HOME/.zshrc_setup_done_$(date +%Y%m%d)"
+    
+    # Clean up old flag files (older than today) - use nullglob to handle no matches
+    setopt local_options nullglob
+    local old_setup_files=("$HOME"/.zshrc_setup_done_*)
+    for file in "${old_setup_files[@]}"; do
+        if [[ -f "$file" && "$file" != "$setup_flag_file" ]]; then
+            rm -f "$file"
+        fi
+    done
+    
+    if [[ ! -f "$setup_flag_file" ]]; then
+        # First run today - show full output
         setup_environment
-        # Remove this hook after running once
-        add-zsh-hook -d precmd setup_environment_once
+        # Create flag file to indicate setup was run today
+        touch "$setup_flag_file"
+    else
+        # Already run today - run silently (redirect all output to /dev/null)
+        setup_environment >/dev/null 2>&1
     fi
 }
 
-# Add the hook to run after Oh My Zsh is loaded
-autoload -U add-zsh-hook
-add-zsh-hook precmd setup_environment_once
+# Schedule the setup to run after instant prompt completes
+# This ensures no console output during instant prompt initialization
+if [[ -o interactive ]]; then
+    # Use zsh/sched module to run after a brief delay, allowing instant prompt to complete
+    zmodload zsh/sched
+    sched +1 run_setup_after_instant_prompt
+fi
