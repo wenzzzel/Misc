@@ -1,14 +1,5 @@
 #!/bin/bash
 
-# Source sensitive configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if [[ -f "${SCRIPT_DIR}/.env.secrets" ]]; then
-    source "${SCRIPT_DIR}/.env.secrets"
-else
-    echo "Error: Configuration file .env.secrets not found in ${SCRIPT_DIR}" >&2
-    return 1 2>/dev/null || exit 1
-fi
-
 # get_cache_record.sh - Get the cached value for the vehicle rest api based on the cache key
 # Usage: get_cache_record.sh <domain> <environment> <key>
 
