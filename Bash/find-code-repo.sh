@@ -34,13 +34,14 @@ find_code_repo() {
     # Create githubrepos.json if it doesn't exist
     if [[ ! -f "$githubrepos_file_path" ]]; then
         echo -e "\033[34mNo githubrepos.json found @ $githubrepos_file_path . Creating it...\033[0m"
-        touch "$githubrepos_file_path"
+        sudo touch "$githubrepos_file_path"
     fi
     
     # Create state.json if it doesn't exist
     if [[ ! -f "$state_path" ]]; then
         echo -e "\033[34mNo state.json found @ $state_path . Creating it...\033[0m"
-        echo '{}' > "$state_path"
+        sudo touch "$state_path"
+        echo '{}' | sudo tee "$state_path"
     fi
     
     # Get current date and week
@@ -86,7 +87,7 @@ find_code_repo() {
     fi
     
     # Save to file as JSON array
-    echo "$github_repos" > "$githubrepos_file_path"
+    echo "$github_repos" | sudo tee "$githubrepos_file_path" > /dev/null
     
     echo " ✔️ Github repos updated successfully! Caching until next week."
     
@@ -100,7 +101,7 @@ find_code_repo() {
     
     # Update the LastGithubReposSyncWeek field
     if command -v jq >/dev/null 2>&1; then
-        echo "$state_content" | jq --arg week "$current_week_key" '.LastGithubReposSyncWeek = $week' > "$state_path"
+        echo "$state_content" | jq --arg week "$current_week_key" '.LastGithubReposSyncWeek = $week' | sudo tee "$state_path" > /dev/null
     else
         # Fallback if jq is not available
         if grep -q "LastGithubReposSyncWeek" "$state_path"; then
