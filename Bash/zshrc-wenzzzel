@@ -374,37 +374,42 @@ done
 ########################
 # MOUNT NETWORK DRIVES #
 ########################
-#TODO: Only mount these if I'm on the correct network
-echo "Mounting drives..."
+echo -e "🔌 \e[1mMounting drives\e[0m"
 if ! dpkg -l | grep -q cifs-utils; then
-  echo "   ⤵️ cifs-utils is needed to mount the drives. Installing..."
+  echo -e "   ⤵️ \e[3;38;5;250mcifs-utils is needed to mount the drives. Installing...\e[0m"
   sudo apt install -y cifs-utils > /dev/null 2>&1
 fi
-# Mount Seagate Exos 1 (D: on host)
+
 if [ ! -d "/mnt/SeagateExos1" ]; then
-  echo "   📁 Creating directory /mnt/SeagateExos1 which will be used to mount the Seagate Exos 1 drive..."
+  echo -e "   📁 \e[3;38;5;250mCreating directory /mnt/SeagateExos1 which will be used to mount the Seagate Exos 1 drive...\e[0m"
   sudo mkdir -p /mnt/SeagateExos1
 else
-  echo "   ✅ Directory /mnt/SeagateExos1 already exists. Skipping creation."
+  echo -e "   ✔️  \e[3;38;5;250mDirectory /mnt/SeagateExos1 already exists. Skipping creation.\e[0m"
 fi
-if ! mountpoint -q /mnt/SeagateExos1; then
-  echo "   🔌 Mounting Seagate Exos 1 drive..."
-  sudo mount -t cifs "//192.168.1.3/SeagateExos1" /mnt/SeagateExos1 -o guest,uid=1000,gid=1000
-else
-  echo "   ✅ Seagate Exos 1 drive is already mounted. Skipping."
-fi
-# Mount Seagate Exos 2 (F: on host)
+
 if [ ! -d "/mnt/SeagateExos2" ]; then
-  echo "   📁 Creating directory /mnt/SeagateExos2 which will be used to mount the Seagate Exos 2 drive..."
+  echo -e "   📁 \e[3;38;5;250mCreating directory /mnt/SeagateExos2 which will be used to mount the Seagate Exos 2 drive...\e[0m"
   sudo mkdir -p /mnt/SeagateExos2
 else
-  echo "   ✅ Directory /mnt/SeagateExos2 already exists. Skipping creation."
+  echo -e "   ✔️  \e[3;38;5;250mDirectory /mnt/SeagateExos2 already exists. Skipping creation.\e[0m"
 fi
-if ! mountpoint -q /mnt/SeagateExos2; then
-  echo "   🔌 Mounting Seagate Exos 2 drive..."
-  sudo mount -t cifs "//192.168.1.3/SeagateExos2" /mnt/SeagateExos2 -o guest,uid=1000,gid=1000
+
+echo -e "   🔍 \e[3;38;5;250mChecking if /etc/fstab contains Seagate Exos mount entries...\e[0m"
+
+FSTAB_PATH="/etc/fstab"
+FSTAB_CONTENT=$(cat $FSTAB_PATH)
+
+EXOS1_ENTRY="//192.168.1.3/SeagateExos1 /mnt/SeagateExos1 cifs guest,uid=1000,gid=1000 0 0"
+EXOS2_ENTRY="//192.168.1.3/SeagateExos2 /mnt/SeagateExos2 cifs guest,uid=1000,gid=1000 0 0"
+
+if [[ "$FSTAB_CONTENT" == *"$EXOS1_ENTRY"* && "$FSTAB_CONTENT" == *"$EXOS2_ENTRY"* ]]; then
+  echo -e "   ✔️  \e[3;38;5;250mfstab already contains both Seagate Exos mount entries. No changes needed.\e[0m"
 else
-  echo "   ✅ Seagate Exos 2 drive is already mounted. Skipping."
+  echo -e "   ⚠️  \e[3;38;5;250mfstab is missing one or both Seagate Exos entries.\e[0m"
+
+  echo -e "   🔧 \e[3;38;5;250mAdding entries to /etc/fstab...\e[0m"
+  echo -e "\n# Mount Seagate Exos 1\n$EXOS1_ENTRY\n\n# Mount Seagate Exos 2\n$EXOS2_ENTRY" | sudo tee -a $FSTAB_PATH > /dev/null
+  echo -e "   ✔️  \e[3;38;5;250mEntries added. You can run 'sudo mount -a' to test them.\e[0m"
 fi
 
 #################
