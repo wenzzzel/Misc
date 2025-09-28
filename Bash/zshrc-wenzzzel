@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 asciiArt="
           ____________________________________________         
 _________|                                       _    |________
@@ -12,6 +12,78 @@ _________|                                       _    |________
 
 echo -e "\e[1;92m$asciiArt\e[0m"
 echo ""
+
+##################
+# SETTING UP ZSH #
+##################
+echo -e "💻 \e[1mChecking if Zsh is installed\e[0m"
+if ! command -v zsh >/dev/null 2>&1; then
+    echo "   ⤵️ Installing Zsh..."
+    sudo apt update && sudo apt install -y zsh &> /dev/null
+else
+	echo -e "   ✔️  \e[3;38;5;250mZsh is already installed!\e[0m"
+fi
+
+# Check if the default shell is already Zsh
+current_shell=$(getent passwd "$USER" | cut -d: -f7)
+if [ "$current_shell" != "$(which zsh)" ]; then
+    echo -e "   🔃 \e[3;38;5;250mChanging default shell to Zsh\e[0m"
+    chsh -s "$(which zsh)"
+	echo "   ✅ \e[3;38;5;250mDefault shell changed to Zsh. Please log out and log back in for the change to take effect\e[0m"
+	return 1 2>/dev/null || exit 1
+fi
+
+########################
+# SETTING UP OH MY ZSH #
+########################
+echo -e "⚙️  \e[1mSetting up Oh My Zsh\e[0m"
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  echo -e "   ⤵️ \e[3;38;5;250mInstalling Oh My Zsh...\e[0m"
+  RUNZSH=no KEEP_ZSHRC=yes \
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+  echo -e "   ⤵️ \e[3;38;5;250mInstalling zsh-autosuggestions...\e[0m"
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+  echo -e "   ⤵️ \e[3;38;5;250mInstalling zsh-syntax-highlighting...\e[0m"
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+  echo -e "   ⚙️  \e[3;38;5;250mConfiguring plugins...\e[0m"
+  sed -i 's/^plugins=(.*)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
+
+  echo -e "   ✔️  \e[3;38;5;250mOh My Zsh setup complete. Please restart your terminal.\e[0m"
+  return 1 2>/dev/null || exit 1
+else
+  echo -e "   ✔️  \e[3;38;5;250mOh My Zsh already set up.\e[0m"
+fi
+
+
+echo -e "🎨 \e[1mSetting up Powerlevel10k theme\e[0m"
+if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" ]; then
+  echo -e "   ⤵️ \e[3;38;5;250mInstalling Powerlevel10k theme...\e[0m"
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
+    ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+  # Set theme in .zshrc
+  sed -i 's/^ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
+
+  echo -e "   ✔️  \e[3;38;5;250mPowerlevel10k installed. Please restart your terminal to configure it.\e[0m"
+  return 1 2>/dev/null || exit 1
+else
+  echo -e "   ✔️  \e[3;38;5;250mPowerlevel10k already installed.\e[0m"
+fi
+
+# Path to Oh My Zsh installation
+export ZSH="$HOME/.oh-my-zsh"
+# Set Powerlevel10k as the theme
+ZSH_THEME="powerlevel10k/powerlevel10k"
+# Enable plugins
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+# Source Oh My Zsh
+source $ZSH/oh-my-zsh.sh
+# Source Powerlevel10k config if it exists
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
 
 ################################
 # SOURCE SENSITIVE INFORMATION #
@@ -62,25 +134,10 @@ else
     mullvad relay set location se
     mullvad dns set default --block-ads --block-trackers --block-malware --block-gambling
 fi
-echo -e "   ▶️  \e[3;38;5;250mStarting Mullvad UI (Unless it's already running)\e[0m"
-pgrep -f "mullvad-gui" > /dev/null || nohup /opt/Mullvad\ VPN/mullvad-vpn --no-sandbox > /dev/null 2>&1 &
+# echo -e "   ▶️  \e[3;38;5;250mStarting Mullvad UI (Unless it's already running)\e[0m"
+# pgrep -f "mullvad-gui" > /dev/null || nohup /opt/Mullvad\ VPN/mullvad-vpn --no-sandbox > /dev/null 2>&1 &
 
-# Check if Zsh is installed, and install if missing
-echo -e "💻 \e[1mChecking if Zsh is installed\e[0m"
-if ! command -v zsh >/dev/null 2>&1; then
-    echo "   ⤵️ Installing Zsh..."
-    sudo apt update && sudo apt install -y zsh &> /dev/null
-else
-	echo -e "   ✔️  \e[3;38;5;250mZsh is already installed!\e[0m"
-fi
 
-# Check if the default shell is already Zsh
-current_shell=$(getent passwd "$USER" | cut -d: -f7)
-if [ "$current_shell" != "$(which zsh)" ]; then
-    echo -e "   🔃 \e[3;38;5;250mChanging default shell to Zsh\e[0m"
-    chsh -s "$(which zsh)"
-	echo "   ✅ \e[3;38;5;250mDefault shell changed to Zsh. Please log out and log back in for the change to take effect\e[0m"
-fi
 
 # Automatically install Docker the recommended way
 echo -e "🐋 \e[1mChecking if Docker is installed\e[0m"
