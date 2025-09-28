@@ -11,7 +11,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # Set Powerlevel10k as the theme
 ZSH_THEME="powerlevel10k/powerlevel10k"
 # Enable plugins
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting azure docker docker-compose dotnet)
 # Source Oh My Zsh if it exists
 [[ -d "$ZSH" ]] && source $ZSH/oh-my-zsh.sh
 # Source Powerlevel10k config if it exists
@@ -20,7 +20,7 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 # Function to run all setup tasks after Oh My Zsh initialization
 setup_environment() {
     asciiArt="
-          ____________________________________________         
+              ____________________________________________         
     _________|                                       _    |________
     \        |   __      _____ _ __  _______________| |   |       /
      \       |   \ \ /\ / / _ \ '_ \|_  /_  /_  / _ \ |   |      / 
