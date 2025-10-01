@@ -135,8 +135,8 @@ setup_environment() {
     mullvad relay set location se
     mullvad dns set default --block-ads --block-trackers --block-malware --block-gambling
     fi
-    # echo -e "   ▶️  \e[3;38;5;250mStarting Mullvad UI (Unless it's already running)\e[0m"
-    # pgrep -f "mullvad-gui" > /dev/null || nohup /opt/Mullvad\ VPN/mullvad-vpn --no-sandbox > /dev/null 2>&1 &
+    echo -e "   ▶️  \e[3;38;5;250mStarting Mullvad UI (Unless it's already running)\e[0m"
+    pgrep -f "mullvad-gui" > /dev/null || nohup /opt/Mullvad\ VPN/mullvad-vpn --no-sandbox > /dev/null 2>&1 &
     
     
     
@@ -371,6 +371,9 @@ setup_environment() {
     		fi
     	fi
     done
+
+    echo -e "🫓 \e[1mChecking flatpak packages\e[0m"
+    # flatpak install flathub hu.irl.cameractrls
     
     ########################
     # MOUNT NETWORK DRIVES #
@@ -426,8 +429,8 @@ setup_environment() {
     # ADD TO PATH #
     ###############
     echo -e "🔠 \e[1mAdding to PATH\e[0m"
-    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2\e[0m"
-    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.2.2/servicebus-cli-linux-x64-0.2.2"
+    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.3.0/servicebus-cli-linux-x64-0.3.0\e[0m"
+    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.3.0/servicebus-cli-linux-x64-0.3.0"
     
     #################################
     # ADDING USER DEFINED FUNCTIONS #
