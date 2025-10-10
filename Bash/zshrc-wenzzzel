@@ -359,6 +359,7 @@ setup_environment() {
     	"libreoffice"
     	"spotify"
     	"pinta"
+        "azuredatastudio"
     )
     for app in "${applications[@]}"; do
     	if snap list | grep -q "$app"; then
