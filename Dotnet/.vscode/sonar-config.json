@@ -1,0 +1,5 @@
+{
+  "server": "https://orion-sonarqube.<domain>.biz",
+  "token": "<put token here>",
+  "projectKey": "<project key>"
+}
