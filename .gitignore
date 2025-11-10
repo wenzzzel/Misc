@@ -9,6 +9,7 @@
 !PowerShell/Profile_scripts/*
 !PowerShell/User_defined_functions/*/*
 !Dotnet/*
+!Dotnet/*/*
 !Bash/*
 
 #Specifically these
