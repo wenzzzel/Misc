@@ -373,6 +373,7 @@ setup_environment() {
     	"git-filter-repo" #Used to clean up history in commits
     	"cifs-utils" #Used for mounting CIFS shares
     	"redis"
+        "eza" #Modern replacement for ls
     )
     for app in "${applications[@]}"; do
     	if dpkg -l | grep -q "$app"; then
@@ -481,6 +482,12 @@ setup_environment() {
     source /home/erik-wenzel/Source/Misc/Bash/find-code-repo.sh
     echo -e "   ✔️  \e[3;38;5;250mget_cache_record (gvcr)\e[0m"
     source /home/erik-wenzel/Source/Misc/Bash/get-cache-record.sh
+
+    ###############
+    # ADD ALIASES #
+    ###############
+    echo -e "👥 \e[1mAdding aliases\e[0m"
+    alias eza='eza -l --group-directories-first --color=auto --no-user --no-time --icons --git-repos --git'
 }
 
 # Function to run setup after instant prompt completes
