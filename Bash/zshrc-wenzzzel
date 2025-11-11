@@ -293,14 +293,14 @@ setup_environment() {
     	echo "   ❌ displaylink-driver is not installed! ";
     
     	echo "   ⤵️ Download apt repo to disk";
-    	wget -o ~/Downloads/synaptics-repository-keyring.deb https://www.synaptics.com/sites/default/files/Ubuntu/pool/stable/main/all/synaptics-repository-keyring.deb &> /dev/null
+    	wget -O ~/Downloads/synaptics-repository-keyring.deb https://www.synaptics.com/sites/default/files/Ubuntu/pool/stable/main/all/synaptics-repository-keyring.deb &> /dev/null
     
-    echo "   🔑 Install apt repo";
-    	sudo apt install ./Downloads/synaptics-repository-keyring.deb &> /dev/null
+        echo "   🔑 Install apt repo";
+    	sudo apt install ~/Downloads/synaptics-repository-keyring.deb &> /dev/null
     
     	echo "   🔄 Updating apt"
     	sudo apt update &> /dev/null
-    echo "   ⤵️  Installing displaylink-driver package"
+        echo "   ⤵️  Installing displaylink-driver package"
     	sudo apt install -y displaylink-driver &> /dev/null
     	echo "   ✅ displaylink-driver installation complete! "
     fi
