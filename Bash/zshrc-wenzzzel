@@ -267,7 +267,7 @@ setup_environment() {
     # Automatically install powershell the recommended way
     echo -e "🐚 \e[1mChecking if powershell is installed\e[0m"
     if dpkg -s powershell &> /dev/null; then
-    echo -e "   ✔️  \e[3;38;5;250mpowershell is already installed!\e[0m"
+        echo -e "   ✔️  \e[3;38;5;250mpowershell is already installed!\e[0m"
     else
     	echo "   ❌ powershell is not installed!";
     
@@ -283,6 +283,26 @@ setup_environment() {
     echo "   ⤵️  Installing powershell package"
     	sudo apt-get install -y powershell &> /dev/null
     	echo "   ✅ powershell installation complete!"
+    fi
+
+    # Automatically install displaylink-driver (used to connect to displays in the office) the recommended way
+    echo -e "🖥️  \e[1mChecking if displaylink-driver is installed \e[0m"
+    if dpkg -s displaylink-driver &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mdisplaylink-driver is already installed! \e[0m"
+    else
+    	echo "   ❌ displaylink-driver is not installed! ";
+    
+    	echo "   ⤵️ Download apt repo to disk";
+    	wget -o ~/Downloads/synaptics-repository-keyring.deb https://www.synaptics.com/sites/default/files/Ubuntu/pool/stable/main/all/synaptics-repository-keyring.deb &> /dev/null
+    
+    echo "   🔑 Install apt repo";
+    	sudo apt install ./Downloads/synaptics-repository-keyring.deb &> /dev/null
+    
+    	echo "   🔄 Updating apt"
+    	sudo apt update &> /dev/null
+    echo "   ⤵️  Installing displaylink-driver package"
+    	sudo apt install -y displaylink-driver &> /dev/null
+    	echo "   ✅ displaylink-driver installation complete! "
     fi
     
     #################################
