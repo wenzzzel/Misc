@@ -376,6 +376,7 @@ setup_environment() {
         "eza" #Modern replacement for ls
         "bat" #Modern replacement for cat
         "npm"
+        "kubetail" #For tailing kubernets logs
     )
     for app in "${applications[@]}"; do
     	if dpkg -l | grep -q "$app"; then
@@ -393,6 +394,7 @@ setup_environment() {
     # npm packages #
     ################
 
+    echo -e "📦 \e[1mChecking npm packages\e[0m"
     if dpkg -l | grep -q "npm"; then
         echo -e "   ✔️  \e[3;38;5;250mnpm is installed. Checking npm packages\e[0m"
 
