@@ -306,6 +306,30 @@ setup_environment() {
     	echo "   ✅ displaylink-driver installation complete! "
     fi
     
+    # Automatically install cloudflared the recommended way
+    echo -e "☁️  \e[1mChecking if cloudflared is installed\e[0m"
+    if dpkg -s cloudflared &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mcloudflared is already installed!\e[0m"
+    else
+    	echo "   ❌ cloudflared is not installed!";
+    
+    	echo "   ➕ Installing dependencies";
+    	sudo apt install -y wget apt-transport-https &> /dev/null
+    
+        echo "   🔑 Install Cloudflare package repository GPG key";
+    	sudo mkdir -p --mode=0755 /usr/share/keyrings
+    	curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+    
+    	echo "   📝 Add Cloudflare repository to apt sources";
+    	echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflared.list
+    
+    	echo "   🔄 Updating apt"
+    	sudo apt update &> /dev/null
+        echo "   ⤵️  Installing cloudflared package"
+    	sudo apt install -y cloudflared &> /dev/null
+    	echo "   ✔️ cloudflared installation complete!"
+    fi
+    
     #################################
     # General package installations #
     #################################
@@ -405,7 +429,14 @@ setup_environment() {
             echo -e "   ⤵️  \e[3;38;5;250mInstalling...\e[0m"
             sudo npm install -g @githubnext/github-copilot-cli
         fi
-        alias wts='github-copilot-cli what-the-shell'
+
+        if npm list -g node &>/dev/null; then
+            echo -e "   ✔️  \e[3;38;5;250mNode is already installed\e[0m"
+        else
+            echo -e "   ❌ \e[3;38;5;250mNode is not installed\e[0m"
+            echo -e "   ⤵️  \e[3;38;5;250mInstalling...\e[0m"
+            sudo npm install -g node
+        fi
     fi
     
     echo -e "📀 \e[1mChecking snap packages\e[0m"
@@ -509,6 +540,7 @@ setup_environment() {
     ###############
     echo -e "👥 \e[1mAdding aliases\e[0m"
     alias eza='eza -l --group-directories-first --color=auto --no-user --no-time --git --header'
+    alias wts='github-copilot-cli what-the-shell'
 }
 
 # Function to run setup after instant prompt completes
