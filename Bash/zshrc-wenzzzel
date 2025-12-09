@@ -329,6 +329,23 @@ setup_environment() {
     	sudo apt install -y cloudflared &> /dev/null
     	echo "   ✔️ cloudflared installation complete!"
     fi
+
+    # Install homebrew
+    if ! command -v brew &> /dev/null; then 
+        echo "🍺 Installing Homebrew..." 
+        sudo apt update 
+        sudo apt install build-essential curl file git 
+
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" 
+
+        echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc 
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 
+        echo "   ✔️ Homebrew installation complete! " 
+    else 
+        # Ensure brew is in PATH even if already installed 
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 2>/dev/null || true 
+    fi 
+
     
     #################################
     # General package installations #
@@ -539,7 +556,7 @@ setup_environment() {
     # ADD ALIASES #
     ###############
     echo -e "👥 \e[1mAdding aliases\e[0m"
-    alias eza='eza -l --group-directories-first --color=auto --no-user --no-time --git --header'
+    alias eza='eza -l --group-directories-first --color=auto --no-user --git --header'
     alias wts='github-copilot-cli what-the-shell'
 }
 
