@@ -344,6 +344,18 @@ setup_environment() {
     else 
         # Ensure brew is in PATH even if already installed 
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 2>/dev/null || true 
+
+        echo -e "🍺 \e[1mChecking brew packages\e[0m"
+        # Check if k9s is installed via brew
+        if ! brew list k9s &> /dev/null; then
+            echo -e "   ❌ \e[3;38;5;250mk9s is not installed! \e[0m";
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install k9s'\e[0m"
+        fi
+        
+        if ! brew list popeye &> /dev/null; then
+            echo -e "   ❌ \e[3;38;5;250mpopeye is not installed! \e[0m";
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install popeye'\e[0m"
+        fi
     fi 
 
     
