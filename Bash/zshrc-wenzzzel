@@ -356,6 +356,11 @@ setup_environment() {
             echo -e "   ❌ \e[3;38;5;250mpopeye is not installed! \e[0m";
             echo -e "      💡 \e[3;38;5;250mRun 'brew install popeye'\e[0m"
         fi
+
+        if ! brew list yq &> /dev/null; then
+            echo -e "   ❌ \e[3;38;5;250myq is not installed! \e[0m";
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install yq'\e[0m"
+        fi
     fi 
 
     
