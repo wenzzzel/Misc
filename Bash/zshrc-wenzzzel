@@ -142,6 +142,18 @@ setup_environment() {
     echo -e "🎮 \e[1mChecking if Unity Hub is installed\e[0m"
     if dpkg -s unityhub &> /dev/null; then
         echo -e "   ✔️  \e[3;38;5;250mUnity Hub is already installed! \e[0m"
+
+        echo -e "   ⚙️  \e[3;38;5;250mSetting up AppArmor profile for Unity Hub\e[0m"
+        sudo tee /etc/apparmor.d/unityhub >/dev/null <<'EOF'
+        abi <abi/4.0>,
+        include <tunables/global>
+
+        profile unityhub /opt/unityhub/unityhub-bin flags=(unconfined) {
+            userns,
+            include if exists <local/unityhub>
+        }
+EOF
+        sudo apparmor_parser -r /etc/apparmor.d/unityhub || sudo systemctl restart apparmor.service
     else
         echo "   ❌ Unity Hub is not installed! ";
         echo "   🔑 Downloading keyring";
