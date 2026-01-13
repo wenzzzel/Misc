@@ -411,14 +411,17 @@ EOF
     	"dotnet-sdk-7.0"
     	"dotnet-sdk-8.0"
     	"dotnet-sdk-9.0"
+	    "dotnet-sdk-10.0"
     	"aspnetcore-runtime-6.0"
     	"aspnetcore-runtime-7.0"
     	"aspnetcore-runtime-8.0"
     	"aspnetcore-runtime-9.0"
+	    "aspnetcore-runtime-10.0"
     	"dotnet-runtime-6.0"
     	"dotnet-runtime-7.0"
     	"dotnet-runtime-8.0"
     	"dotnet-runtime-9.0"
+	    "dotnet-runtime-10.0"
     	"ca-certificates"	#dependency for .net
     	"libc6"			#dependency for .net
     	"libgcc-s1"		#dependency for .net
@@ -499,7 +502,6 @@ EOF
     	"libreoffice"
     	"spotify"
     	"pinta"
-        "azuredatastudio"
     )
     for app in "${applications[@]}"; do
     	if snap list | grep -q "$app"; then
