@@ -599,6 +599,17 @@ EOF
     echo -e "👥 \e[1mAdding aliases\e[0m"
     alias eza='eza -l --group-directories-first --color=auto --no-user --git --header'
     alias wts='github-copilot-cli what-the-shell'
+
+    ################################
+    # Check if NuGet.config exists #
+    ################################
+    echo -e "🍗 \e[1mChecking that NuGet.config exists \e[0m"
+    NUGET_CONFIG_PATH="$HOME/.config/NuGet/NuGet.config"
+    if [ ! -f "$NUGET_CONFIG_PATH" ]; then
+        echo -e "❌ \e[3;38;5;250mNuGet.config does not exist in '$NUGET_CONFIG_PATH'! Create it and add nuget feed credentials. \e[0m"
+    else
+        echo -e "   ✔️  \e[3;38;5;250mNuGet.config found in '$NUGET_CONFIG_PATH'.\e[0m"
+    fi
 }
 
 # Function to run setup after instant prompt completes
