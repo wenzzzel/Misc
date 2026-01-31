@@ -547,6 +547,13 @@ EOF
     else
         echo -e "   ✔️  \e[3;38;5;250mDirectory /mnt/SeagateExos3 already exists. Skipping creation.\e[0m"
     fi
+
+    if [ ! -d "/mnt/MergedDrives" ]; then
+        echo -e "   📁 \e[3;38;5;250mCreating directory /mnt/MergedDrives which will be used to mount the merged drives...\e[0m"
+        sudo mkdir -p /mnt/MergedDrives
+    else
+        echo -e "   ✔️  \e[3;38;5;250mDirectory /mnt/MergedDrives already exists. Skipping creation.\e[0m"
+    fi
     
     echo -e "   🔍 \e[3;38;5;250mChecking if /etc/fstab contains Seagate Exos mount entries...\e[0m"
     
@@ -556,15 +563,16 @@ EOF
     EXOS1_ENTRY="//192.168.1.3/SeagateExos1 /mnt/SeagateExos1 cifs guest,uid=1000,gid=1000 0 0"
     EXOS2_ENTRY="//192.168.1.3/SeagateExos2 /mnt/SeagateExos2 cifs guest,uid=1000,gid=1000 0 0"
     EXOS3_ENTRY="//192.168.1.3/SeagateExos3 /mnt/SeagateExos3 cifs guest,uid=1000,gid=1000 0 0"
+    MERGED_ENTRY="//192.168.1.3/MergedDrives /mnt/MergedDrives cifs guest,uid=1000,gid=1000 0 0"
     
-    if [[ "$FSTAB_CONTENT" == *"$EXOS1_ENTRY"* && "$FSTAB_CONTENT" == *"$EXOS2_ENTRY"* && "$FSTAB_CONTENT" == *"$EXOS3_ENTRY"* ]]; then
-        echo -e "   ✔️  \e[3;38;5;250mfstab already contains all three Seagate Exos mount entries. No changes needed.\e[0m"
+    if [[ "$FSTAB_CONTENT" == *"$EXOS1_ENTRY"* && "$FSTAB_CONTENT" == *"$EXOS2_ENTRY"* && "$FSTAB_CONTENT" == *"$EXOS3_ENTRY"* && "$FSTAB_CONTENT" == *"$MERGED_ENTRY"* ]]; then
+        echo -e "   ✔️  \e[3;38;5;250mfstab already contains all three Seagate Exos mount entries + Merged Drive entry. No changes needed.\e[0m"
     else
-        echo -e "   ⚠️  \e[3;38;5;250mfstab is missing one or more Seagate Exos entries.\e[0m"
+        echo -e "   ⚠️  \e[3;38;5;250mfstab is missing one or more Seagate Exos entries or Merged Drive entry.\e[0m"
     
         echo -e "   🔧 \e[3;38;5;250mAdding entries to /etc/fstab...\e[0m"
-        echo -e "\n# Mount Seagate Exos 1\n$EXOS1_ENTRY\n\n# Mount Seagate Exos 2\n$EXOS2_ENTRY\n\n# Mount Seagate Exos 3\n$EXOS3_ENTRY" | sudo tee -a $FSTAB_PATH > /dev/null
-        sudo daemon-reload
+        echo -e "\n# Mount Seagate Exos 1\n$EXOS1_ENTRY\n\n# Mount Seagate Exos 2\n$EXOS2_ENTRY\n\n# Mount Seagate Exos 3\n$EXOS3_ENTRY\n\n# Mount Merged Drives\n$MERGED_ENTRY" | sudo tee -a $FSTAB_PATH > /dev/null
+        sudo systemctl daemon-reload
         echo -e "   ✔️  \e[3;38;5;250mEntries added. You can run 'sudo mount -a' to test them.\e[0m"
     fi
     
