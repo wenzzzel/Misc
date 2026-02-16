@@ -8,6 +8,9 @@
 !PowerShell/*
 !PowerShell/Profile_scripts/*
 !PowerShell/User_defined_functions/*/*
+!Dotnet/*
+!Dotnet/*/*
+!Bash/*
 
 #Specifically these
 PowerShell/powershell.config.json
@@ -15,3 +18,4 @@ nvim_plugins/
 Crap/
 state.json
 githubrepos.json
+Bash/.env.secrets

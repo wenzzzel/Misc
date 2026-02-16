@@ -1,0 +1,653 @@
+#!/bin/zsh
+
+# Get script directory before entering function (where %N works correctly)
+SCRIPT_DIR="$(cd "$(dirname "${(%):-%N}")" && pwd)"
+
+# Path to Oh My Zsh installation
+export ZSH="$HOME/.oh-my-zsh"
+# Set Powerlevel10k as the theme
+ZSH_THEME="powerlevel10k/powerlevel10k"
+# Enable plugins
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting azure docker docker-compose dotnet zsh-bat jsontools)
+# Source Oh My Zsh if it exists
+[[ -d "$ZSH" ]] && source $ZSH/oh-my-zsh.sh
+
+# Function to run all setup tasks after Oh My Zsh initialization
+setup_environment() {
+    asciiArt="
+              ____________________________________________         
+    _________|                                       _    |________
+    \        |   __      _____ _ __  _______________| |   |       /
+     \       |   \ \ /\ / / _ \ '_ \|_  /_  /_  / _ \ |   |      / 
+      \      |    \ V  V /  __/ | | |/ / / / / /  __/ |   |     /  
+      /      |     \_/\_/ \___|_| |_/___/___/___\___|_|   |     \  
+     /       |____________________________________________|      \ 
+    /_____________)                                 (_____________\                                                             
+    ";
+    
+    echo -e "\e[1;92m$asciiArt\e[0m"
+    echo ""
+    
+    ##################
+    # SETTING UP ZSH #
+    ##################
+    echo -e "💻 \e[1mChecking if Zsh is installed\e[0m"
+    if ! command -v zsh >/dev/null 2>&1; then
+        echo "   ⤵️ Installing Zsh..."
+        sudo apt update && sudo apt install -y zsh &> /dev/null
+    else
+    	echo -e "   ✔️  \e[3;38;5;250mZsh is already installed!\e[0m"
+    fi
+    
+    # Check if the default shell is already Zsh
+    current_shell=$(getent passwd "$USER" | cut -d: -f7)
+    if [ "$current_shell" != "$(which zsh)" ]; then
+        echo -e "   🔃 \e[3;38;5;250mChanging default shell to Zsh\e[0m"
+        chsh -s "$(which zsh)"
+    	echo "   ✔️ \e[3;38;5;250mDefault shell changed to Zsh. Please log out and log back in for the change to take effect\e[0m"
+    	return 1 2>/dev/null || exit 1
+    fi
+    
+    ########################
+    # SETTING UP OH MY ZSH #
+    ########################
+    echo -e "⚙️  \e[1mSetting up Oh My Zsh\e[0m"
+    if [ ! -d "$HOME/.oh-my-zsh" ]; then
+        echo -e "   ⤵️ \e[3;38;5;250mInstalling Oh My Zsh...\e[0m"
+        RUNZSH=no KEEP_ZSHRC=yes \
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    
+        echo -e "   ⤵️ \e[3;38;5;250mInstalling zsh-autosuggestions...\e[0m"
+        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    
+        echo -e "   ⤵️ \e[3;38;5;250mInstalling zsh-syntax-highlighting...\e[0m"
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    
+        echo -e "   ⚙️  \e[3;38;5;250mConfiguring plugins...\e[0m"
+        sed -i 's/^plugins=(.*)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
+    
+        echo -e "   ✔️  \e[3;38;5;250mOh My Zsh setup complete. Please restart your terminal.\e[0m"
+        return 1 2>/dev/null || exit 1
+    else
+        echo -e "   ✔️  \e[3;38;5;250mOh My Zsh already set up.\e[0m"
+    fi
+    
+    
+    echo -e "🎨 \e[1mSetting up Powerlevel10k theme\e[0m"
+    if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" ]; then
+        echo -e "   ⤵️ \e[3;38;5;250mInstalling Powerlevel10k theme...\e[0m"
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
+        ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+    
+        # Set theme in .zshrc
+        sed -i 's/^ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' ~/.zshrc
+    
+        echo -e "   ✔️  \e[3;38;5;250mPowerlevel10k installed. Please restart your terminal to configure it.\e[0m"
+        return 1 2>/dev/null || exit 1
+    else
+        echo -e "   ✔️  \e[3;38;5;250mPowerlevel10k already installed.\e[0m"
+    fi
+    
+    ################################
+    # SOURCE SENSITIVE INFORMATION #
+    ################################
+    if [[ -f "${SCRIPT_DIR}/.env.secrets" ]]; then
+        source "${SCRIPT_DIR}/.env.secrets"
+    else
+        echo "Error: Configuration file .env.secrets not found in ${SCRIPT_DIR}" >&2
+        return 1 2>/dev/null || exit 1
+    fi
+    
+    ##################################
+    # Specific package installations #
+    ##################################
+    
+    # Automatically install Mullvad the recommended way
+    echo -e "🐹 \e[1mChecking if Mullvad VPN is installed\e[0m"
+    if dpkg -s mullvad-vpn &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mMullvad VPN is already installed!\e[0m"
+    else
+        # Download the Mullvad signing key
+        echo "   ❌ Mullvad is not installed!"
+        echo "   🔑 Downloading keyring"
+        sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc
+        
+        # Add the Mullvad repository server to apt
+        echo "   📁 Adding Mullvad repo"
+        echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable stable main" | sudo tee /etc/apt/sources.list.d/mullvad.list
+        
+        # Install the package
+        echo "   🔄 Updating apt"
+        sudo apt update
+        echo "   ⤵️ Installing mullvad-vpn"
+        sudo apt install mullvad-vpn
+        
+        # Step 5: Enable and start the Mullvad service
+        echo "   ➕ Enabling and starting Mullvad VPN service..."
+        sudo systemctl enable --now mullvad-daemon
+        
+        echo "   ✔️ Mullvad VPN installation complete!"
+        
+        echo "Configuring Mullvad"
+        mullvad account login $MULLVAD_LOGIN
+        mullvad auto-connect set on
+        mullvad lan set allow
+        mullvad relay set location se
+        mullvad dns set default --block-ads --block-trackers --block-malware --block-gambling
+    fi
+    echo -e "   ▶️  \e[3;38;5;250mStarting Mullvad UI (Unless it's already running)\e[0m"
+    pgrep -f "mullvad-gui" > /dev/null || nohup /opt/Mullvad\ VPN/mullvad-vpn --no-sandbox > /dev/null 2>&1 &
+    
+    # Automatically install Unity hub the recommended way
+    echo -e "🎮 \e[1mChecking if Unity Hub is installed\e[0m"
+    if dpkg -s unityhub &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mUnity Hub is already installed! \e[0m"
+
+        echo -e "   ⚙️  \e[3;38;5;250mSetting up AppArmor profile for Unity Hub\e[0m"
+        sudo tee /etc/apparmor.d/unityhub >/dev/null <<'EOF'
+        abi <abi/4.0>,
+        include <tunables/global>
+
+        profile unityhub /opt/unityhub/unityhub-bin flags=(unconfined) {
+            userns,
+            include if exists <local/unityhub>
+        }
+EOF
+        sudo apparmor_parser -r /etc/apparmor.d/unityhub || sudo systemctl restart apparmor.service
+    else
+        echo "   ❌ Unity Hub is not installed! ";
+        echo "   🔑 Downloading keyring";
+        wget -qO - https://hub.unity3d.com/linux/keys/public | gpg --dearmor | sudo tee /usr/share/keyrings/Unity_Technologies_ApS.gpg > /dev/null
+        
+        echo "   📁 Adding Unity Technologies repo"
+        sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/Unity_Technologies_ApS.gpg] https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'
+
+        echo "   🔄 Updating apt"
+        sudo apt update > /dev/null
+
+        echo "   ⤵️ Installing Unity Hub"
+        sudo apt install unityhub > /dev/null
+
+        echo "   ✔️ Unity Hub installation complete! "
+    fi
+
+    # Automatically install Docker the recommended way
+    echo -e "🐋 \e[1mChecking if Docker is installed\e[0m"
+    if dpkg -s docker-ce &> /dev/null && \
+       dpkg -s docker-ce-cli &> /dev/null && \
+       dpkg -s containerd.io &> /dev/null && \
+       dpkg -s docker-buildx-plugin &> /dev/null && \
+       dpkg -s docker-compose-plugin &> /dev/null; then
+    
+        echo -e "   ✔️  \e[3;38;5;250mDocker is already installed!\e[0m"
+    else
+        echo "   ❌ Docker is not installed!";
+        echo "   🔑 Downloading keyring";
+        # Add Docker's official GPG key:
+        # sudo apt-get update # <-- Can this be removed?
+        # sudo apt-get install ca-certificates curl # <-- Can this be removed?
+        sudo install -m 0755 -d /etc/apt/keyrings
+        sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+        sudo chmod a+r /etc/apt/keyrings/docker.asc
+    
+        # Add the Docker repository server to apt
+        echo "   📁 Adding Docker repo"
+        echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+        $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    	echo "   🔄 Updating apt"
+        sudo apt-get update
+        
+        # Install the packages
+        echo "   ⤵️ Installing Docker packages (docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin)"
+        sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+    
+    	echo "   ✔️ Docker installation complete!"
+    fi
+    
+    # Automatically install kubectl the recommended way
+    echo -e "🛠️  \e[1mChecking if kubectl is installed\e[0m"
+    if dpkg -s kubectl &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mkubectl is already installed!\e[0m"
+    else
+        echo "   ❌ kubectl is not installed!";
+    	# Install prerequisites
+    	sudo apt update;
+    	echo "   ⤵️ Installing prerequisites (apt-transport-https ca-certificates curl gnupg)"
+    	sudo apt install -y apt-transport-https ca-certificates curl gnupg;
+    
+        echo "   🔑 Downloading keyring";
+    	if [ ! -d "/etc/apt/keyrings" ]; then
+    		echo "   💬 Creating directory /etc/apt/keyrings which will be used for apt keyrings..."
+    		sudo mkdir -p -m 755 /etc/apt/keyrings
+    	else
+    		echo "   💬 Directory /etc/apt/keyrings already exists. Skipping creation."
+    	fi
+    	curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    	sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg # allow unprivileged APT programs to read this keyring
+    
+        # Add the Kubernetes repository server to apt
+        echo "   📁 Adding Kubernetes repo"
+    	# This overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list
+    	echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    	sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list   # helps tools such as command-not-found to work correctly
+    	
+    	echo "   🔄 Updating apt"
+        sudo apt-get update
+    
+        # Install the packages
+        echo "   ⤵️ Installing Kubectl package"
+        sudo apt-get install -y kubectl
+    
+    	echo "   ✔️ Kubectl installation complete!"
+    fi
+    
+    # Automatically install minikube the recommended way
+    echo -e "🔨 \e[1mChecking if minikube is installed\e[0m"
+    if dpkg -s minikube &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mminikube is already installed!\e[0m"
+    else
+    	echo "   ❌ minikube is not installed!";
+    	# Download the latest minikube release
+    	echo "   ⤵️ Downloading minikube"
+    	curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+    	sudo dpkg -i minikube_latest_amd64.deb
+    	echo "   ✔️ Minikube installation complete!"
+    fi
+    
+    # Automatically install azure-functions-core-tools-4 the recommended way
+    echo -e "🌩️  \e[1mChecking if azure-functions-core-tools-4 is installed\e[0m"
+    if dpkg -s azure-functions-core-tools-4 &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mazure-functions-core-tools-4 is already installed!\e[0m"
+    else
+        echo "   ❌ azure-functions-core-tools-4 is not installed!";
+    
+        echo "   🔑 Install Microsoft package repository GPG key";
+    	curl https://packages.microsoft.com/keys/microsoft.asc &> /dev/null | gpg --dearmor > microsoft.gpg &> /dev/null
+    	sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg &> /dev/null
+    
+        echo "   📁 Adding dotnetdev repo"
+    	sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs 2>/dev/null)-prod $(lsb_release -cs 2>/dev/null) main" > /etc/apt/sources.list.d/dotnetdev.list'
+    
+    	echo "   🔄 Updating apt"
+    	sudo apt-get update &> /dev/null
+        echo "   ⤵️  Installing azure-functions-core-tools-4 package"
+    	sudo apt-get install -y azure-functions-core-tools-4 &> /dev/null
+    	echo "   ✔️ azure-functions-core-tools-4 installation complete!"
+    fi
+    
+    # Automatically install powershell the recommended way
+    echo -e "🐚 \e[1mChecking if powershell is installed\e[0m"
+    if dpkg -s powershell &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mpowershell is already installed!\e[0m"
+    else
+    	echo "   ❌ powershell is not installed!";
+    
+    	echo "   ➕ Installing dependencies";
+    	sudo apt install -y wget apt-transport-https software-properties-common &> /dev/null
+    
+        echo "   🔑 Install Microsoft package repository GPG key";
+    	wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb &> /dev/null
+    	sudo dpkg -i packages-microsoft-prod.deb &> /dev/null
+    
+    	echo "   🔄 Updating apt"
+    	sudo apt-get update &> /dev/null
+        echo "   ⤵️  Installing powershell package"
+    	sudo apt-get install -y powershell &> /dev/null
+    	echo "   ✔️ powershell installation complete!"
+    fi
+
+    # Automatically install displaylink-driver (used to connect to displays in the office) the recommended way
+    echo -e "🖥️  \e[1mChecking if displaylink-driver is installed \e[0m"
+    if dpkg -s displaylink-driver &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mdisplaylink-driver is already installed! \e[0m"
+    else
+    	echo "   ❌ displaylink-driver is not installed! ";
+    
+    	echo "   ⤵️ Download apt repo to disk";
+    	wget -O ~/Downloads/synaptics-repository-keyring.deb https://www.synaptics.com/sites/default/files/Ubuntu/pool/stable/main/all/synaptics-repository-keyring.deb &> /dev/null
+    
+        echo "   🔑 Install apt repo";
+    	sudo apt install ~/Downloads/synaptics-repository-keyring.deb &> /dev/null
+    
+    	echo "   🔄 Updating apt"
+    	sudo apt update &> /dev/null
+        echo "   ⤵️  Installing displaylink-driver package"
+    	sudo apt install -y displaylink-driver &> /dev/null
+    	echo "   ✅ displaylink-driver installation complete! "
+    fi
+    
+    # Automatically install cloudflared the recommended way
+    echo -e "☁️  \e[1mChecking if cloudflared is installed\e[0m"
+    if dpkg -s cloudflared &> /dev/null; then
+        echo -e "   ✔️  \e[3;38;5;250mcloudflared is already installed!\e[0m"
+    else
+    	echo "   ❌ cloudflared is not installed!";
+    
+    	echo "   ➕ Installing dependencies";
+    	sudo apt install -y wget apt-transport-https &> /dev/null
+    
+        echo "   🔑 Install Cloudflare package repository GPG key";
+    	sudo mkdir -p --mode=0755 /usr/share/keyrings
+    	curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+    
+    	echo "   📝 Add Cloudflare repository to apt sources";
+    	echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflared.list
+    
+    	echo "   🔄 Updating apt"
+    	sudo apt update &> /dev/null
+        echo "   ⤵️  Installing cloudflared package"
+    	sudo apt install -y cloudflared &> /dev/null
+    	echo "   ✔️ cloudflared installation complete!"
+    fi
+
+    # Install homebrew
+    if [ ! -f /home/linuxbrew/.linuxbrew/bin/brew ]; then 
+        echo "🍺 Installing Homebrew..." 
+        sudo apt update 
+        sudo apt install build-essential curl file git 
+
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" 
+
+        echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bashrc 
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 
+        echo "   ✔️ Homebrew installation complete! " 
+    else 
+        # Ensure brew is in PATH even if already installed 
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 2>/dev/null || true 
+
+        echo -e "🍺 \e[1mChecking brew packages\e[0m"
+        # Check if k9s is installed via brew
+        if ! brew list k9s &> /dev/null; then
+            echo -e "   ❌ \e[3;38;5;250mk9s is not installed! \e[0m";
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install k9s'\e[0m"
+        fi
+        
+        if ! brew list popeye &> /dev/null; then
+            echo -e "   ❌ \e[3;38;5;250mpopeye is not installed! \e[0m";
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install popeye'\e[0m"
+        fi
+
+        if ! brew list yq &> /dev/null; then
+            echo -e "   ❌ \e[3;38;5;250myq is not installed! \e[0m";
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install yq'\e[0m"
+        fi
+    fi 
+
+    
+    #################################
+    # General package installations #
+    #################################
+    echo -e "📁 \e[1mChecking misc apt repos\e[0m"
+    
+    repos=(
+    	"ppa.launchpadcontent.net/dotnet/backports" #microsoft .net repo, needed to install dotnet
+    	"https://apt.releases.hashicorp.com" #hashicorps repo, needed to install terraform
+    	"ppa.launchpadcontent.net/openrazer/stable" # For Polychromatic razer app
+    	"ppa.launchpadcontent.net/polychromatic/stable" # For Polychromatic razer app
+    )
+    for repo in "${repos[@]}"; do
+    	if grep -rq "$repo" /etc/apt/sources.list.d/; then
+    		echo -e "   ✔️  \e[3;38;5;250m$repo\e[0m"
+    	else
+    		echo -e "   ❌ \e[3;38;5;250m$repo\e[0m"
+    		echo -e "      💡 \e[3;38;5;250mRun 'sudo apt-add-repository $repo'\e[0m"
+    	fi
+    done
+    
+    echo -e "💿 \e[1mChecking apt packages\e[0m"
+    applications=(
+    	"neovim" 
+    	"gnome-characters" 
+    	"ibus" 
+    	"git" 
+    	"make" 
+    	"gh" 
+    	"curl" 
+    	"fzf" 
+    	"filezilla"
+    	"dotnet-sdk-6.0"
+    	"dotnet-sdk-7.0"
+    	"dotnet-sdk-8.0"
+    	"dotnet-sdk-9.0"
+	    "dotnet-sdk-10.0"
+    	"aspnetcore-runtime-6.0"
+    	"aspnetcore-runtime-7.0"
+    	"aspnetcore-runtime-8.0"
+    	"aspnetcore-runtime-9.0"
+	    "aspnetcore-runtime-10.0"
+    	"dotnet-runtime-6.0"
+    	"dotnet-runtime-7.0"
+    	"dotnet-runtime-8.0"
+    	"dotnet-runtime-9.0"
+	    "dotnet-runtime-10.0"
+    	"ca-certificates"	#dependency for .net
+    	"libc6"			#dependency for .net
+    	"libgcc-s1"		#dependency for .net
+    	"libicu74"		#dependency for .net
+    	"liblttng-ust1"		#dependency for .net
+    	"libssl3"		#dependency for .net
+    	"libstdc++6"		#dependency for .net
+    	"zlib1g"		#dependency for .net
+    	"slack"
+    	"terraform"
+    	"nodejs"
+    	"openrazer-meta" #Razer drivers (backend)
+    	"polychromatic" #Razer drivers (frontend)
+    	"kubectl"
+    	"minikube"
+    	"ffmpeg"
+    	"flatpak"
+    	"default-jre" #Needed by vscode SonarQube extension. Also had to add the path "/usr/lib/jvm/java-1.21.0-openjdk-amd64" to the vscode user setting "SonarLint.Ls.JavaHome".
+    	"gnome-shell-extension-manager" #Needed for managing GNOME Shell extensions
+    	"chrome-gnome-shell" #Needed for managing GNOME Shell extensions
+    	"usb-creator-gtk" #Used to burn iso images to usb
+    	"git-filter-repo" #Used to clean up history in commits
+    	"cifs-utils" #Used for mounting CIFS shares
+    	"redis"
+        "eza" #Modern replacement for ls
+        "bat" #Modern replacement for cat
+        "npm"
+        "kubetail" #For tailing kubernets logs
+        "mergerfs" #For merging drives
+    )
+    for app in "${applications[@]}"; do
+    	if dpkg -l | grep -q "$app"; then
+    		echo -e "   ✔️  \e[3;38;5;250m$app\e[0m"
+    	else
+    		echo -e "   ❌ \e[3;38;5;250m$app\e[0m"
+    		echo -e "      💡 \e[3;38;5;250mRun 'sudo apt install $app'\e[0m"
+    		if [ "$app" == "fzf" ]; then
+    			echo -e "      💡 Don't forget to copy the key-bindings to ~/.bashrc. The keybindings can be found in '/usr/share/doc/fzf/examples/key-bindings.bash'"
+    		fi
+    	fi
+    done
+
+    ################
+    # npm packages #
+    ################
+
+    echo -e "📦 \e[1mChecking npm packages\e[0m"
+    if dpkg -l | grep -q "npm"; then
+        echo -e "   ✔️  \e[3;38;5;250mnpm is installed. Checking npm packages\e[0m"
+
+        if npm list -g @githubnext/github-copilot-cli &>/dev/null; then
+            echo -e "   ✔️  \e[3;38;5;250mGitHub Copilot CLI is already installed\e[0m"
+        else
+            echo -e "   ❌ \e[3;38;5;250mGitHub Copilot CLI is not installed\e[0m"
+            echo -e "   ⤵️  \e[3;38;5;250mInstalling...\e[0m"
+            sudo npm install -g @githubnext/github-copilot-cli
+        fi
+
+        if npm list -g node &>/dev/null; then
+            echo -e "   ✔️  \e[3;38;5;250mNode is already installed\e[0m"
+        else
+            echo -e "   ❌ \e[3;38;5;250mNode is not installed\e[0m"
+            echo -e "   ⤵️  \e[3;38;5;250mInstalling...\e[0m"
+            sudo npm install -g node
+        fi
+    fi
+    
+    echo -e "📀 \e[1mChecking snap packages\e[0m"
+    applications=(
+    	"copilot-desktop" 
+    	"steam" 
+    	"code" 
+    	"discord"
+    	"thunderbird"
+    	"gimp"
+    	"openvino-toolkit-2404" #Used by gimp
+    	"openvino-ai-plugins-gimp" # Used by gimp
+    	"libreoffice"
+    	"spotify"
+    	"pinta"
+    )
+    for app in "${applications[@]}"; do
+    	if snap list | grep -q "$app"; then
+    		echo -e "   ✔️  \e[3;38;5;250m$app\e[0m"
+    	else
+    		echo -e "   ❌ \e[3;38;5;250m$app\e[0m"
+    		echo -e "      💡 \e[3;38;5;250mRun 'sudo snap install $app'\e[0m"
+    		if [ "$app" == "gimp" ]; then
+    			echo -e "      💡 Don't forget to add your user to the 'render' group: 'sudo usermod -a -G render erik-wenzel'"
+    		fi
+    	fi
+    done
+
+    echo -e "🫓 \e[1mChecking flatpak packages\e[0m"
+    # flatpak install flathub hu.irl.cameractrls
+    
+    ########################
+    # MOUNT NETWORK DRIVES #
+    ########################
+    echo -e "🔌 \e[1mMounting drives\e[0m"
+    if ! dpkg -l | grep -q cifs-utils; then
+        echo -e "   ⤵️ \e[3;38;5;250mcifs-utils is needed to mount the drives. Installing...\e[0m"
+        sudo apt install -y cifs-utils > /dev/null 2>&1
+    fi
+    
+    if [ ! -d "/mnt/SeagateExos1" ]; then
+        echo -e "   📁 \e[3;38;5;250mCreating directory /mnt/SeagateExos1 which will be used to mount the Seagate Exos 1 drive...\e[0m"
+        sudo mkdir -p /mnt/SeagateExos1
+    else
+      echo -e "   ✔️  \e[3;38;5;250mDirectory /mnt/SeagateExos1 already exists. Skipping creation.\e[0m"
+    fi
+    
+    if [ ! -d "/mnt/SeagateExos2" ]; then
+        echo -e "   📁 \e[3;38;5;250mCreating directory /mnt/SeagateExos2 which will be used to mount the Seagate Exos 2 drive...\e[0m"
+        sudo mkdir -p /mnt/SeagateExos2
+    else
+        echo -e "   ✔️  \e[3;38;5;250mDirectory /mnt/SeagateExos2 already exists. Skipping creation.\e[0m"
+    fi
+
+    if [ ! -d "/mnt/SeagateExos3" ]; then
+        echo -e "   📁 \e[3;38;5;250mCreating directory /mnt/SeagateExos3 which will be used to mount the Seagate Exos 3 drive...\e[0m"
+        sudo mkdir -p /mnt/SeagateExos3
+    else
+        echo -e "   ✔️  \e[3;38;5;250mDirectory /mnt/SeagateExos3 already exists. Skipping creation.\e[0m"
+    fi
+
+    if [ ! -d "/mnt/MergedDrives" ]; then
+        echo -e "   📁 \e[3;38;5;250mCreating directory /mnt/MergedDrives which will be used to mount the merged drives...\e[0m"
+        sudo mkdir -p /mnt/MergedDrives
+    else
+        echo -e "   ✔️  \e[3;38;5;250mDirectory /mnt/MergedDrives already exists. Skipping creation.\e[0m"
+    fi
+    
+    echo -e "   🔍 \e[3;38;5;250mChecking if /etc/fstab contains Seagate Exos mount entries...\e[0m"
+    
+    FSTAB_PATH="/etc/fstab"
+    FSTAB_CONTENT=$(cat $FSTAB_PATH)
+    
+    EXOS1_ENTRY="//192.168.1.3/SeagateExos1 /mnt/SeagateExos1 cifs guest,uid=1000,gid=1000 0 0"
+    EXOS2_ENTRY="//192.168.1.3/SeagateExos2 /mnt/SeagateExos2 cifs guest,uid=1000,gid=1000 0 0"
+    EXOS3_ENTRY="//192.168.1.3/SeagateExos3 /mnt/SeagateExos3 cifs guest,uid=1000,gid=1000 0 0"
+    MERGED_ENTRY="//192.168.1.3/MergedDrives /mnt/MergedDrives cifs guest,uid=1000,gid=1000 0 0"
+    
+    if [[ "$FSTAB_CONTENT" == *"$EXOS1_ENTRY"* && "$FSTAB_CONTENT" == *"$EXOS2_ENTRY"* && "$FSTAB_CONTENT" == *"$EXOS3_ENTRY"* && "$FSTAB_CONTENT" == *"$MERGED_ENTRY"* ]]; then
+        echo -e "   ✔️  \e[3;38;5;250mfstab already contains all three Seagate Exos mount entries + Merged Drive entry. No changes needed.\e[0m"
+    else
+        echo -e "   ⚠️  \e[3;38;5;250mfstab is missing one or more Seagate Exos entries or Merged Drive entry.\e[0m"
+    
+        echo -e "   🔧 \e[3;38;5;250mAdding entries to /etc/fstab...\e[0m"
+        echo -e "\n# Mount Seagate Exos 1\n$EXOS1_ENTRY\n\n# Mount Seagate Exos 2\n$EXOS2_ENTRY\n\n# Mount Seagate Exos 3\n$EXOS3_ENTRY\n\n# Mount Merged Drives\n$MERGED_ENTRY" | sudo tee -a $FSTAB_PATH > /dev/null
+        sudo systemctl daemon-reload
+        echo -e "   ✔️  \e[3;38;5;250mEntries added. You can run 'sudo mount -a' to test them.\e[0m"
+    fi
+    
+    #################
+    # ENV VARIABLES #
+    #################
+    echo -e "🌳 \e[1mSetting environment variables\e[0m"
+    echo -e "   ✔️  \e[3;38;5;250mASPNETCORE_ENVIRONMENT=Development\e[0m"
+    export ASPNETCORE_ENVIRONMENT=Development
+    echo -e "   ✔️  \e[3;38;5;250mAZURE_FUNCTIONS_ENVIRONMENT=Development\e[0m"
+    export AZURE_FUNCTIONS_ENVIRONMENT=Development
+    
+    ###############
+    # ADD TO PATH #
+    ###############
+    echo -e "🔠 \e[1mAdding to PATH\e[0m"
+    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.3.0/servicebus-cli-linux-x64-0.3.0\e[0m"
+    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.3.0/servicebus-cli-linux-x64-0.3.0"
+    
+    #################################
+    # ADDING USER DEFINED FUNCTIONS #
+    #################################
+    echo -e "⚙️  \e[1mLoading user defined functions\e[0m"
+    echo -e "   ✔️  \e[3;38;5;250mfind_code_repo (fcr)\e[0m"
+    source /home/erik-wenzel/Source/Misc/Bash/find-code-repo.sh
+    echo -e "   ✔️  \e[3;38;5;250mget_cache_record (gvcr)\e[0m"
+    source /home/erik-wenzel/Source/Misc/Bash/get-cache-record.sh
+
+    ###############
+    # ADD ALIASES #
+    ###############
+    echo -e "👥 \e[1mAdding aliases\e[0m"
+    alias eza='eza -l --group-directories-first --color=auto --no-user --git --header'
+    alias wts='github-copilot-cli what-the-shell'
+
+    ################################
+    # Check if NuGet.config exists #
+    ################################
+    echo -e "🍗 \e[1mChecking that NuGet.config exists \e[0m"
+    NUGET_CONFIG_PATH="$HOME/.config/NuGet/NuGet.config"
+    if [ ! -f "$NUGET_CONFIG_PATH" ]; then
+        echo -e "❌ \e[3;38;5;250mNuGet.config does not exist in '$NUGET_CONFIG_PATH'! Create it and add nuget feed credentials. \e[0m"
+    else
+        echo -e "   ✔️  \e[3;38;5;250mNuGet.config found in '$NUGET_CONFIG_PATH'.\e[0m"
+    fi
+}
+
+# Function to run setup after instant prompt completes
+run_setup_after_instant_prompt() {
+    local setup_flag_file="$HOME/.zshrc_setup_done_$(date +%Y%m%d)"
+    
+    # Clean up old flag files (older than today) - use nullglob to handle no matches
+    setopt local_options nullglob
+    local old_setup_files=("$HOME"/.zshrc_setup_done_*)
+    for file in "${old_setup_files[@]}"; do
+        if [[ -f "$file" && "$file" != "$setup_flag_file" ]]; then
+            rm -f "$file"
+        fi
+    done
+    
+    if [[ ! -f "$setup_flag_file" ]]; then
+        # First run today - show full output
+        setup_environment
+        # Create flag file to indicate setup was run today
+        touch "$setup_flag_file"
+    else
+        # Already run today - run silently (redirect all output to /dev/null)
+        setup_environment >/dev/null 2>&1
+    fi
+}
+
+# Schedule the setup to run after instant prompt completes
+# This ensures no console output during instant prompt initialization
+if [[ -o interactive ]]; then
+    # Use zsh/sched module to run after a brief delay, allowing instant prompt to complete
+    zmodload zsh/sched
+    sched +1 run_setup_after_instant_prompt
+fi
