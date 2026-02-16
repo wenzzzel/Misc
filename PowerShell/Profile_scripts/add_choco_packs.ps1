@@ -40,8 +40,8 @@ $chocoPackages = @{
     "godot-mono" = "C:\ProgramData\chocolatey\lib\godot-mono\tools\Godot_v4.3-stable_mono_win64"
     "azure-cosmosdb-emulator" = "C:\Program Files\Azure Cosmos DB Emulator\"
     "kubernetes-cli" = "C:\ProgramData\chocolatey\lib\kubernetes-cli\tools\kubernetes\client\bin\" # This is kubectl
-    "vscode" = "C:\Program Files\Microsoft VS Code\bin"
-    "microsoft-teams" = "C:\Users\EWENTZEL\AppData\Local\Microsoft\Teams\current"
+    #"claude" = "C:\Users\wenzz\AppData\Local\AnthropicClaude\" #Commenting this out because the name will conflict with claude-code (both are called claude.exe)
+    "claude-code" = "C:\ProgramData\chocolatey\lib\claude-code\tools\"
 }
 $chocoPackages = $chocoPackages.GetEnumerator() | Sort-Object -Property Key;
 $whiteSpaceCount = 40;

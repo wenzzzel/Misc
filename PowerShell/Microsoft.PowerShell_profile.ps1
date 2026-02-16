@@ -22,8 +22,17 @@ Write-Host $asciiArt -ForegroundColor Green;
 & "$PROFILE/../Profile_Scripts/add_aliases.ps1";
 & "$PROFILE/../Profile_Scripts/setup_choco_tab_completion.ps1";
 & "$PROFILE/../Profile_Scripts/add_user_defined_functions.ps1";
-& "$PROFILE/../Profile_Scripts/check_reminders.ps1";
+# & "$PROFILE/../Profile_Scripts/check_reminders.ps1"; # Commenting this out. I don't think I want it anymore
 & "$PROFILE/../Profile_Scripts/setup_choco_tab_completion.ps1";
 & "$PROFILE/../Profile_Scripts/check_wsl.ps1";
 & "$PROFILE/../Profile_Scripts/activate_posh.ps1";
 & "$PROFILE/../Profile_Scripts/activate_ps_intellisense.ps1";
+# Import the Chocolatey Profile that contains the necessary code to enable
+# tab-completions to function for `choco`.
+# Be aware that if you are missing these lines from your profile, tab completion
+# for `choco` will not function.
+# See https://ch0.co/tab-completion for details.
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}
