@@ -630,7 +630,7 @@ EOF
     # ADD ALIASES #
     ###############
     echo -e "👥 \e[1mAdding aliases\e[0m"
-    alias eza='eza -l --group-directories-first --color=auto --no-user --git --header'
+    alias eza='eza -l --group-directories-first --color=auto --git --header'
     alias wts='github-copilot-cli what-the-shell'
 
     ################################
