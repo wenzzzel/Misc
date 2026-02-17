@@ -255,6 +255,31 @@ EOF
     	sudo dpkg -i minikube_latest_amd64.deb
     	echo "   ✔️ Minikube installation complete!"
     fi
+
+    # Install Warp terminal if not present
+    echo -e "⌨️  \e[1mChecking if warp-terminal is installed \e[0m "
+    if command -v warp-terminal &>/dev/null && ! dpkg -l warp-terminal 2>/dev/null | grep -q '^ii'; then
+        echo -e "   ✔️  \e[3;38;5;250mwarp-terminal is already installed! \e[0m "
+    else
+        echo "   ❌ warp-terminal not installed!"
+
+        WARP_LIST="/etc/apt/sources.list.d/warpdotdev.list"
+        WARP_KEYRING="/usr/share/keyrings/warpdotdev-archive-keyring.gpg"
+
+        if [[ ! -f "$WARP_LIST" ]]; then
+            echo "   📁 Adding Warp repo"
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq curl gpg
+            curl -fsSL https://releases.warp.dev/linux/keys/warp.asc | \
+                sudo gpg --dearmor -o "$WARP_KEYRING"
+            echo "deb [arch=amd64 signed-by=${WARP_KEYRING}] https://releases.warp.dev/linux/deb stable main" | \
+                sudo tee "$WARP_LIST" > /dev/null
+        fi
+
+        sudo apt-get update -qq
+        sudo apt-get install -y warp-terminal
+        echo "   ✔️ Warp terminal installation complete!"
+    fi
     
     # Automatically install azure-functions-core-tools-4 the recommended way
     echo -e "🌩️  \e[1mChecking if azure-functions-core-tools-4 is installed\e[0m"
