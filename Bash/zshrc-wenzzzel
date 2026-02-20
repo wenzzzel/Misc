@@ -482,6 +482,7 @@ EOF
         "kubetail" #For tailing kubernets logs
         "mergerfs" #For merging drives
         "kubectx" #Used for handling multiple kubernetes contexts
+        "kitty"
     )
     for app in "${applications[@]}"; do
     	if dpkg -l | grep -q "$app"; then
