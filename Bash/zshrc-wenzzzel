@@ -258,7 +258,7 @@ EOF
 
     # Install Warp terminal if not present
     echo -e "⌨️  \e[1mChecking if warp-terminal is installed \e[0m "
-    if command -v warp-terminal &>/dev/null && ! dpkg -l warp-terminal 2>/dev/null | grep -q '^ii'; then
+    if dpkg -l warp-terminal 2>/dev/null | grep -q '^ii'; then
         echo -e "   ✔️  \e[3;38;5;250mwarp-terminal is already installed! \e[0m "
     else
         echo "   ❌ warp-terminal not installed!"
