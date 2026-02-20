@@ -398,6 +398,11 @@ EOF
             echo -e "   ❌ \e[3;38;5;250myq is not installed! \e[0m";
             echo -e "      💡 \e[3;38;5;250mRun 'brew install yq'\e[0m"
         fi
+
+        if ! brew list argocd &> /dev/null; then
+            echo -e "   ❌ \e[3;38;5;250margocd is not installed! \e[0m";
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install argocd'\e[0m"
+        fi
     fi 
 
     
@@ -476,6 +481,7 @@ EOF
         "npm"
         "kubetail" #For tailing kubernets logs
         "mergerfs" #For merging drives
+        "kubectx" #Used for handling multiple kubernetes contexts
     )
     for app in "${applications[@]}"; do
     	if dpkg -l | grep -q "$app"; then
