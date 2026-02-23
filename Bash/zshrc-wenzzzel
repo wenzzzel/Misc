@@ -403,6 +403,11 @@ EOF
             echo -e "   ❌ \e[3;38;5;250margocd is not installed! \e[0m";
             echo -e "      💡 \e[3;38;5;250mRun 'brew install argocd'\e[0m"
         fi
+
+        if ! brew list newman &> /dev/null; then
+            echo -e "   ❌ \e[3;38;5;250mnewman is not installed! \e[0m";
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install newman'\e[0m"
+        fi
     fi 
 
     
