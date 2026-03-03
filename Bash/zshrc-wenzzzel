@@ -626,8 +626,8 @@ EOF
     # ADD TO PATH #
     ###############
     echo -e "🔠 \e[1mAdding to PATH\e[0m"
-    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.3.0/servicebus-cli-linux-x64-0.3.0\e[0m"
-    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.3.0/servicebus-cli-linux-x64-0.3.0"
+    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.4.0/servicebus-cli-linux-x64-0.4.0\e[0m"
+    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.4.0/servicebus-cli-linux-x64-0.4.0"
     
     #################################
     # ADDING USER DEFINED FUNCTIONS #
