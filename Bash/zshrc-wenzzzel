@@ -514,7 +514,7 @@ EOF
         else
             echo -e "   ❌ \e[3;38;5;250mGitHub Copilot CLI is not installed\e[0m"
             echo -e "   ⤵️  \e[3;38;5;250mInstalling...\e[0m"
-            sudo npm install -g @githubnext/github-copilot-cli
+            npm install -g @githubnext/github-copilot-cli
         fi
 
         if npm list -g node &>/dev/null; then
@@ -522,7 +522,7 @@ EOF
         else
             echo -e "   ❌ \e[3;38;5;250mNode is not installed\e[0m"
             echo -e "   ⤵️  \e[3;38;5;250mInstalling...\e[0m"
-            sudo npm install -g node
+            npm install -g node
         fi
     fi
     
