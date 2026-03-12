@@ -421,6 +421,11 @@ EOF
             echo -e "   ❌ \e[3;38;5;250mnewman is not installed! \e[0m";
             echo -e "      💡 \e[3;38;5;250mRun 'brew install newman'\e[0m"
         fi
+
+        if ! brew list git-filter-repo &> /dev/null; then
+            echo -e "   ❌ \e[3;38;5;250mgit-filter-repo is not installed! \e[0m";
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install git-filter-repo'\e[0m"
+        fi
     fi 
 
     
