@@ -141,31 +141,27 @@ setup_environment() {
     # Automatically install Unity hub the recommended way
     echo -e "🎮 \e[1mChecking if Unity Hub is installed\e[0m"
 
-    UNITYHUB_APPARMOR_PROFILE="/etc/apparmor.d/unityhub"
-    UNITYHUB_APPARMOR_MARKER="profile unityhub /opt/unityhub/unityhub-bin flags=(unconfined)"
-
-    setup_unityhub_apparmor() {
-        if test -f "$UNITYHUB_APPARMOR_PROFILE" && grep -qF "$UNITYHUB_APPARMOR_MARKER" "$UNITYHUB_APPARMOR_PROFILE"; then
-            echo -e "   ✔️  \e[3;38;5;250mUnity Hub AppArmor profile already configured.\e[0m"
-            return
-        fi
-
-        echo -e "   ⚙️  \e[3;38;5;250mSetting up AppArmor profile for Unity Hub\e[0m"
-        sudo tee "$UNITYHUB_APPARMOR_PROFILE" >/dev/null <<'EOF'
-        abi <abi/4.0>,
-        include <tunables/global>
-
-        profile unityhub /opt/unityhub/unityhub-bin flags=(unconfined) {
-            userns,
-            include if exists <local/unityhub>
-        }
-EOF
-        sudo apparmor_parser -r "$UNITYHUB_APPARMOR_PROFILE" || sudo systemctl restart apparmor.service
-    }
-
     if dpkg -s unityhub &> /dev/null; then
         echo -e "   ✔️  \e[3;38;5;250mUnity Hub is already installed! \e[0m"
-        setup_unityhub_apparmor
+        
+        UNITYHUB_APPARMOR_PROFILE="/etc/apparmor.d/unityhub"
+        UNITYHUB_APPARMOR_MARKER="profile unityhub /opt/unityhub/unityhub-bin flags=(unconfined)"
+
+        if test -f "$UNITYHUB_APPARMOR_PROFILE" && grep -qF "$UNITYHUB_APPARMOR_MARKER" "$UNITYHUB_APPARMOR_PROFILE"; then
+            echo -e "   ✔️  \e[3;38;5;250mUnity Hub AppArmor profile already configured.\e[0m"
+        else
+            echo -e "   ⚙️  \e[3;38;5;250mSetting up AppArmor profile for Unity Hub\e[0m"
+            sudo tee "$UNITYHUB_APPARMOR_PROFILE" >/dev/null <<'EOF'
+abi <abi/4.0>,
+include <tunables/global>
+
+profile unityhub /opt/unityhub/unityhub-bin flags=(unconfined) {
+  userns,
+  include if exists <local/unityhub>
+}
+EOF
+            sudo apparmor_parser -r "$UNITYHUB_APPARMOR_PROFILE" || sudo systemctl restart apparmor.service
+        fi
     else
         echo "   ❌ Unity Hub is not installed! ";
         echo "   🔑 Downloading keyring";
@@ -181,7 +177,6 @@ EOF
         sudo apt install unityhub > /dev/null
 
         echo "   ✔️ Unity Hub installation complete! "
-        setup_unityhub_apparmor
     fi
 
     # Automatically install Docker the recommended way
