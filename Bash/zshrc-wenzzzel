@@ -140,7 +140,6 @@ setup_environment() {
     
     # Automatically install Unity hub the recommended way
     echo -e "🎮 \e[1mChecking if Unity Hub is installed\e[0m"
-
     if dpkg -s unityhub &> /dev/null; then
         echo -e "   ✔️  \e[3;38;5;250mUnity Hub is already installed! \e[0m"
         
@@ -537,6 +536,14 @@ EOF
             echo -e "   ⤵️  \e[3;38;5;250mInstalling...\e[0m"
             npm install -g node
         fi
+
+        if npm list -g openclaw &>/dev/null; then
+            echo -e "   ✔️  \e[3;38;5;250mOpenClaw is already installed\e[0m"
+        else
+            echo -e "   ❌ \e[3;38;5;250mOpenClaw is not installed\e[0m"
+            echo -e "   ⤵️  \e[3;38;5;250mInstalling...\e[0m"
+            npm install -g openclaw@latest
+        fi
     fi
     
     echo -e "📀 \e[1mChecking snap packages\e[0m"
@@ -639,8 +646,8 @@ EOF
     # ADD TO PATH #
     ###############
     echo -e "🔠 \e[1mAdding to PATH\e[0m"
-    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.4.0/servicebus-cli-linux-x64-0.4.0\e[0m"
-    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.4.0/servicebus-cli-linux-x64-0.4.0"
+    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.4.2/servicebus-cli-linux-x64-0.4.2\e[0m"
+    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.4.2/servicebus-cli-linux-x64-0.4.2"
     
     #################################
     # ADDING USER DEFINED FUNCTIONS #
