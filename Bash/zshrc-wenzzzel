@@ -429,7 +429,7 @@ EOF
     echo -e "📁 \e[1mChecking misc apt repos\e[0m"
     
     repos=(
-    	"ppa.launchpadcontent.net/dotnet/backports" #microsoft .net repo, needed to install dotnet
+    	#"ppa.launchpadcontent.net/dotnet/backports" #microsoft .net repo, needed to install dotnet
     	"https://apt.releases.hashicorp.com" #hashicorps repo, needed to install terraform
     	"ppa.launchpadcontent.net/openrazer/stable" # For Polychromatic razer app
     	"ppa.launchpadcontent.net/polychromatic/stable" # For Polychromatic razer app
