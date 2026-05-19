@@ -585,12 +585,12 @@ EOF
     ################################
     # Check if NuGet.config exists #
     ################################
-    echo -e "🍗 \e[1mChecking that NuGet.config exists \e[0m"
-    NUGET_CONFIG_PATH="$HOME/.nuget/NuGet/NuGet.config"
+    echo -e "🍗 \e[1mChecking that NuGet.Config exists \e[0m"
+    NUGET_CONFIG_PATH="$HOME/.nuget/NuGet/NuGet.Config"
     if [ ! -f "$NUGET_CONFIG_PATH" ]; then
-        echo -e "❌ \e[3;38;5;250mNuGet.config does not exist in '$NUGET_CONFIG_PATH'! Create it and add nuget feed credentials. \e[0m"
+        echo -e "❌ \e[3;38;5;250mNuGet.Config does not exist in '$NUGET_CONFIG_PATH'! Create it and add nuget feed credentials. \e[0m"
     else
-        echo -e "   ✔️  \e[3;38;5;250mNuGet.config found in '$NUGET_CONFIG_PATH'.\e[0m"
+        echo -e "   ✔️  \e[3;38;5;250mNuGet.Config found in '$NUGET_CONFIG_PATH'.\e[0m"
     fi
 }
 
