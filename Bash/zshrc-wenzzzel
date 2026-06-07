@@ -365,36 +365,40 @@ EOF
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)" 2>/dev/null || true 
 
         echo -e "🍺 \e[1mChecking brew packages\e[0m"
-        # Check if k9s is installed via brew
-        if ! brew list k9s &> /dev/null; then
-            echo -e "   ❌ \e[3;38;5;250mk9s is not installed! \e[0m";
+
+        _brew_installed=$(brew list 2>/dev/null)
+
+        if ! echo "$_brew_installed" | grep -qx "k9s"; then
+            echo -e "   ❌ \e[3;38;5;250mk9s is not installed! \e[0m"
             echo -e "      💡 \e[3;38;5;250mRun 'brew install k9s'\e[0m"
         fi
-        
-        if ! brew list popeye &> /dev/null; then
-            echo -e "   ❌ \e[3;38;5;250mpopeye is not installed! \e[0m";
+
+        if ! echo "$_brew_installed" | grep -qx "popeye"; then
+            echo -e "   ❌ \e[3;38;5;250mpopeye is not installed! \e[0m"
             echo -e "      💡 \e[3;38;5;250mRun 'brew install popeye'\e[0m"
         fi
 
-        if ! brew list yq &> /dev/null; then
-            echo -e "   ❌ \e[3;38;5;250myq is not installed! \e[0m";
+        if ! echo "$_brew_installed" | grep -qx "yq"; then
+            echo -e "   ❌ \e[3;38;5;250myq is not installed! \e[0m"
             echo -e "      💡 \e[3;38;5;250mRun 'brew install yq'\e[0m"
         fi
 
-        if ! brew list argocd &> /dev/null; then
-            echo -e "   ❌ \e[3;38;5;250margocd is not installed! \e[0m";
+        if ! echo "$_brew_installed" | grep -qx "argocd"; then
+            echo -e "   ❌ \e[3;38;5;250margocd is not installed! \e[0m"
             echo -e "      💡 \e[3;38;5;250mRun 'brew install argocd'\e[0m"
         fi
 
-        if ! brew list newman &> /dev/null; then
-            echo -e "   ❌ \e[3;38;5;250mnewman is not installed! \e[0m";
+        if ! echo "$_brew_installed" | grep -qx "newman"; then
+            echo -e "   ❌ \e[3;38;5;250mnewman is not installed! \e[0m"
             echo -e "      💡 \e[3;38;5;250mRun 'brew install newman'\e[0m"
         fi
 
-        if ! brew list git-filter-repo &> /dev/null; then
-            echo -e "   ❌ \e[3;38;5;250mgit-filter-repo is not installed! \e[0m";
+        if ! echo "$_brew_installed" | grep -qx "git-filter-repo"; then
+            echo -e "   ❌ \e[3;38;5;250mgit-filter-repo is not installed! \e[0m"
             echo -e "      💡 \e[3;38;5;250mRun 'brew install git-filter-repo'\e[0m"
         fi
+
+        unset _brew_installed
     fi 
 
     
