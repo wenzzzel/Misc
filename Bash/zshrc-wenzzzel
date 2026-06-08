@@ -596,6 +596,12 @@ EOF
     else
         echo -e "   ✔️  \e[3;38;5;250mNuGet.Config found in '$NUGET_CONFIG_PATH'.\e[0m"
     fi
+
+    ##############################
+    # Setting some Gnome configs #
+    ##############################
+    echo -e "🍗 \e[1mAdding week numbers to the gnome calendar \e[0m"
+    gsettings set org.gnome.desktop.calendar show-weekdate true
 }
 
 # Function to run setup after instant prompt completes
