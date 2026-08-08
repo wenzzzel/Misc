@@ -144,7 +144,7 @@ setup_environment() {
         echo -e "   ✔️  \e[3;38;5;250mUnity Hub is already installed! \e[0m"
         
         UNITYHUB_APPARMOR_PROFILE="/etc/apparmor.d/unityhub"
-        UNITYHUB_APPARMOR_MARKER="profile unityhub /opt/unityhub/unityhub-bin flags=(unconfined)"
+        UNITYHUB_APPARMOR_MARKER="profile unityhub /usr/lib/unityhub/unityhub-bin flags=(unconfined)"
 
         if test -f "$UNITYHUB_APPARMOR_PROFILE" && grep -qF "$UNITYHUB_APPARMOR_MARKER" "$UNITYHUB_APPARMOR_PROFILE"; then
             echo -e "   ✔️  \e[3;38;5;250mUnity Hub AppArmor profile already configured.\e[0m"
@@ -154,7 +154,7 @@ setup_environment() {
 abi <abi/4.0>,
 include <tunables/global>
 
-profile unityhub /opt/unityhub/unityhub-bin flags=(unconfined) {
+profile unityhub /usr/lib/unityhub/unityhub-bin flags=(unconfined) {
   userns,
   include if exists <local/unityhub>
 }
@@ -433,29 +433,29 @@ EOF
     	"curl" 
     	"fzf" 
     	"filezilla"
-    	"dotnet-sdk-6.0"
-    	"dotnet-sdk-7.0"
-    	"dotnet-sdk-8.0"
-    	"dotnet-sdk-9.0"
-	    "dotnet-sdk-10.0"
-    	"aspnetcore-runtime-6.0"
-    	"aspnetcore-runtime-7.0"
-    	"aspnetcore-runtime-8.0"
-    	"aspnetcore-runtime-9.0"
-	    "aspnetcore-runtime-10.0"
-    	"dotnet-runtime-6.0"
-    	"dotnet-runtime-7.0"
-    	"dotnet-runtime-8.0"
-    	"dotnet-runtime-9.0"
-	    "dotnet-runtime-10.0"
-    	"ca-certificates"	#dependency for .net
-    	"libc6"			#dependency for .net
-    	"libgcc-s1"		#dependency for .net
-    	"libicu74"		#dependency for .net
-    	"liblttng-ust1"		#dependency for .net
-    	"libssl3"		#dependency for .net
-    	"libstdc++6"		#dependency for .net
-    	"zlib1g"		#dependency for .net
+    	# "dotnet-sdk-6.0"
+    	# "dotnet-sdk-7.0"
+    	# "dotnet-sdk-8.0"
+    	# "dotnet-sdk-9.0"
+	    # "dotnet-sdk-10.0"
+    	# "aspnetcore-runtime-6.0"
+    	# "aspnetcore-runtime-7.0"
+    	# "aspnetcore-runtime-8.0"
+    	# "aspnetcore-runtime-9.0"
+	    # "aspnetcore-runtime-10.0"
+    	# "dotnet-runtime-6.0"
+    	# "dotnet-runtime-7.0"
+    	# "dotnet-runtime-8.0"
+    	# "dotnet-runtime-9.0"
+	    # "dotnet-runtime-10.0"
+    	"ca-certificates"
+    	"libc6"
+    	"libgcc-s1"
+    	"libicu74"
+    	"liblttng-ust1"
+    	"libssl3"
+    	"libstdc++6"
+    	"zlib1g"
     	"slack"
     	"terraform"
     	"nodejs"
@@ -479,6 +479,7 @@ EOF
         "mergerfs" #For merging drives
         "kubectx" #Used for handling multiple kubernetes contexts
         "kitty"
+        "sqlitebrowser"
     )
     for app in "${applications[@]}"; do
     	if dpkg -l | grep -q "$app"; then
@@ -562,13 +563,17 @@ EOF
     export ASPNETCORE_ENVIRONMENT=Development
     echo -e "   ✔️  \e[3;38;5;250mAZURE_FUNCTIONS_ENVIRONMENT=Development\e[0m"
     export AZURE_FUNCTIONS_ENVIRONMENT=Development
+    echo -e "   ✔️  \e[3;38;5;250mDOTNET_ROOT=$HOME/.dotnet\e[0m"
+    export DOTNET_ROOT=$HOME/.dotnet
+    echo -e "   ✔️  \e[3;38;5;250mPATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools\e[0m"
+    export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools
     
     ###############
     # ADD TO PATH #
     ###############
     echo -e "🔠 \e[1mAdding to PATH\e[0m"
-    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.4.4/servicebus-cli-linux-x64-0.4.4\e[0m"
-    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.4.4/servicebus-cli-linux-x64-0.4.4"
+    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.5.1/servicebus-cli-linux-x64-0.5.1\e[0m"
+    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.5.1/servicebus-cli-linux-x64-0.5.1"
     
     #################################
     # ADDING USER DEFINED FUNCTIONS #
