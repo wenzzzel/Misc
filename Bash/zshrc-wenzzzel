@@ -566,7 +566,7 @@ EOF
     echo -e "   ✔️  \e[3;38;5;250mDOTNET_ROOT=$HOME/.dotnet\e[0m"
     export DOTNET_ROOT=$HOME/.dotnet
     echo -e "   ✔️  \e[3;38;5;250mPATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools\e[0m"
-    export PATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools
+    export PATH=$HOME/.dotnet:$HOME/.dotnet/tools:$PATH
     
     ###############
     # ADD TO PATH #
