@@ -547,7 +547,7 @@ EOF
     		echo -e "   ❌ \e[3;38;5;250m$app\e[0m"
     		echo -e "      💡 \e[3;38;5;250mRun 'sudo snap install $app'\e[0m"
     		if [ "$app" == "gimp" ]; then
-    			echo -e "      💡 Don't forget to add your user to the 'render' group: 'sudo usermod -a -G render erik-wenzel'"
+    			echo -e "      💡 Don't forget to add your user to the 'render' group: 'sudo usermod -a -G render ewentzel'"
     		fi
     	fi
     done
@@ -580,9 +580,9 @@ EOF
     #################################
     echo -e "⚙️  \e[1mLoading user defined functions\e[0m"
     echo -e "   ✔️  \e[3;38;5;250mfind_code_repo (fcr)\e[0m"
-    source /home/erik-wenzel/Source/Misc/Bash/find-code-repo.sh
+    source ~/Source/Misc/Bash/find-code-repo.sh
     echo -e "   ✔️  \e[3;38;5;250mget_cache_record (gvcr)\e[0m"
-    source /home/erik-wenzel/Source/Misc/Bash/get-cache-record.sh
+    source ~/Source/Misc/Bash/get-cache-record.sh
 
     ###############
     # ADD ALIASES #
