@@ -451,9 +451,9 @@ EOF
     	else
     		echo -e "   ❌ \e[3;38;5;250m$app\e[0m"
     		echo -e "      💡 \e[3;38;5;250mRun 'sudo apt install $app'\e[0m"
-    		if [ "$app" == "fzf" ]; then
-    			echo -e "      💡 Don't forget to copy the key-bindings to ~/.bashrc. The keybindings can be found in '/usr/share/doc/fzf/examples/key-bindings.bash'"
-    		fi
+    		# if [ "$app" == "fzf" ]; then
+    		# 	echo -e "      💡 Don't forget to copy the key-bindings to ~/.bashrc. The keybindings can be found in '/usr/share/doc/fzf/examples/key-bindings.bash'"
+    		# fi
     	fi
     done
 
