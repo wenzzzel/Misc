@@ -444,6 +444,7 @@ EOF
         "kubectx" #Used for handling multiple kubernetes contexts
         "kitty"
         "sqlitebrowser"
+        "gh"
     )
     for app in "${applications[@]}"; do
     	if dpkg -l | grep -q "$app"; then
