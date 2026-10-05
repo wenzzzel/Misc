@@ -462,7 +462,7 @@ EOF
     ################
 
     echo -e "📦 \e[1mChecking npm packages\e[0m"
-    if dpkg -l | grep -q "npm"; then
+    if command -v npm >/dev/null 2>&1; then
         echo -e "   ✔️  \e[3;38;5;250mnpm is installed. Checking npm packages\e[0m"
 
         if npm list -g @githubnext/github-copilot-cli &>/dev/null; then
@@ -473,12 +473,10 @@ EOF
             npm install -g @githubnext/github-copilot-cli
         fi
 
-        if npm list -g node &>/dev/null; then
-            echo -e "   ✔️  \e[3;38;5;250mNode is already installed\e[0m"
+        if command -v node >/dev/null 2>&1; then
+            echo -e "   ✔️  \e[3;38;5;250mNode is already installed: $(node --version)\e[0m"
         else
-            echo -e "   ❌ \e[3;38;5;250mNode is not installed\e[0m"
-            echo -e "   ⤵️  \e[3;38;5;250mInstalling...\e[0m"
-            npm install -g node
+            echo -e "   ❌ \e[3;38;5;250mNode is not available in PATH. Install or activate it with nvm.\e[0m" >&2
         fi
 
         if npm list -g openclaw &>/dev/null; then
