@@ -102,42 +102,6 @@ setup_environment() {
     # Specific package installations #
     ##################################
     
-    # Automatically install Mullvad the recommended way
-    echo -e "🐹 \e[1mChecking if Mullvad VPN is installed\e[0m"
-    if dpkg -s mullvad-vpn &> /dev/null; then
-        echo -e "   ✔️  \e[3;38;5;250mMullvad VPN is already installed!\e[0m"
-    else
-        # Download the Mullvad signing key
-        echo "   ❌ Mullvad is not installed!"
-        echo "   🔑 Downloading keyring"
-        sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc
-        
-        # Add the Mullvad repository server to apt
-        echo "   📁 Adding Mullvad repo"
-        echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable stable main" | sudo tee /etc/apt/sources.list.d/mullvad.list
-        
-        # Install the package
-        echo "   🔄 Updating apt"
-        sudo apt update
-        echo "   ⤵️ Installing mullvad-vpn"
-        sudo apt install mullvad-vpn
-        
-        # Step 5: Enable and start the Mullvad service
-        echo "   ➕ Enabling and starting Mullvad VPN service..."
-        sudo systemctl enable --now mullvad-daemon
-        
-        echo "   ✔️ Mullvad VPN installation complete!"
-        
-        echo "Configuring Mullvad"
-        mullvad account login $MULLVAD_LOGIN
-        mullvad auto-connect set on
-        mullvad lan set allow
-        mullvad relay set location se
-        mullvad dns set default --block-ads --block-trackers --block-malware --block-gambling
-    fi
-    echo -e "   ▶️  \e[3;38;5;250mStarting Mullvad UI (Unless it's already running)\e[0m"
-    pgrep -f "mullvad-gui" > /dev/null || nohup /opt/Mullvad\ VPN/mullvad-vpn --no-sandbox > /dev/null 2>&1 &
-    
     # Automatically install Unity hub the recommended way
     echo -e "🎮 \e[1mChecking if Unity Hub is installed\e[0m"
     if dpkg -s unityhub &> /dev/null; then
