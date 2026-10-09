@@ -570,6 +570,8 @@ EOF
     ##############################
     echo -e "🍗 \e[1mAdding week numbers to the gnome calendar \e[0m"
     gsettings set org.gnome.desktop.calendar show-weekdate true
+    echo -e "🍗 \e[1mMaking new windows open in middle of screen \e[0m"
+    gsettings set org.gnome.mutter center-new-windows true
 }
 
 # Function to run setup after instant prompt completes
