@@ -530,6 +530,8 @@ EOF
     export DOTNET_ROOT=$HOME/.dotnet
     echo -e "   ✔️  \e[3;38;5;250mPATH=$PATH:$HOME/.dotnet:$HOME/.dotnet/tools\e[0m"
     export PATH=$HOME/.dotnet:$HOME/.dotnet/tools:$PATH
+    echo -e "   ✔️  \e[3;38;5;250mGRIP_INTEGRATION_TESTS_COSMOS_DB_CONNECTION_STRING\e[0m"
+    export GRIP_INTEGRATION_TESTS_COSMOS_DB_CONNECTION_STRING # The value exists in .env.secrets which has to exist in this directory
     
     ###############
     # ADD TO PATH #
