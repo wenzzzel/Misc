@@ -362,6 +362,16 @@ EOF
             echo -e "      💡 \e[3;38;5;250mRun 'brew install git-filter-repo'\e[0m"
         fi
 
+        if ! echo "$_brew_installed" | grep -qx "lazygit"; then
+            echo -e "   ❌ \e[3;38;5;250mlazygit is not installed! \e[0m"
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install lazygit'\e[0m"
+        fi
+
+        if ! echo "$_brew_installed" | grep -qx "ast-grep"; then
+            echo -e "   ❌ \e[3;38;5;250mast-grep is not installed! \e[0m"
+            echo -e "      💡 \e[3;38;5;250mRun 'brew install ast-grep'\e[0m"
+        fi
+
         unset _brew_installed
     fi 
 
@@ -442,9 +452,9 @@ EOF
         "kubetail" #For tailing kubernets logs
         "mergerfs" #For merging drives
         "kubectx" #Used for handling multiple kubernetes contexts
-        "kitty"
         "sqlitebrowser"
         "gh"
+        "ripgrep"
     )
     for app in "${applications[@]}"; do
     	if dpkg -l | grep -q "$app"; then
@@ -537,10 +547,12 @@ EOF
     # ADD TO PATH #
     ###############
     echo -e "🔠 \e[1mAdding to PATH\e[0m"
-    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli-0.5.1/servicebus-cli-linux-x64-0.5.1\e[0m"
-    export PATH="$PATH:$HOME/Builds/servicebus-cli-0.5.1/servicebus-cli-linux-x64-0.5.1"
+    echo -e "   ✔️  \e[3;38;5;250m$HOME/Builds/servicebus-cli/servicebus-cli-linux-x64-0.5.1\e[0m"
+    export PATH="$PATH:$HOME/Builds/servicebus-cli/servicebus-cli-linux-x64-0.5.1"
     echo -e "   ✔️  \e[3;38;5;250m/opt/nvim/bin\e[0m"
     export PATH="$PATH:/opt/nvim/bin"
+    echo -e "   ✔️  \e[3;38;5;250m$HOME/.local/bin\e[0m"
+    export PATH="$HOME/.local/bin:$PATH"
     
     #################################
     # ADDING USER DEFINED FUNCTIONS #
